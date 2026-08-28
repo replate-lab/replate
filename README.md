@@ -197,5 +197,8 @@ under CERN-OHL-S v2.
 
 ---
 
-*Built in Ulaanbaatar, Mongolia. First prototype, first attempt. Where it is
-wrong, the corrections will be recorded here alongside the original claim.*
+**Chinbuyan T.** — Ulaanbaatar, Mongolia  
+[github.com/chinbuyan](https://github.com/chinbuyan)
+
+*First prototype, first attempt. Where it is wrong, the corrections will be
+recorded here alongside the original claim.*
