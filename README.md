@@ -6,7 +6,7 @@ a stable, storable soil amendment feedstock in under five hours.
 **The claim this project tests:** converting food waste into fertiliser feedstock
 is a mass-transfer problem, not a biological one. The machine that does it is
 limited by how fast water vapour can leave the vessel — not by how much heat
-goes into it. Everything in this design follows from that.
+goes into it. Every design decision here follows from that.
 
 **Status:** Phase 0 — design and calculation. Nothing is built yet. Every
 calculation, every data run, and every failure will be published here as it
@@ -14,28 +14,43 @@ happens, not reconstructed afterwards.
 
 ---
 
+## Team
+
+Four co-founders. Ulaanbaatar, Mongolia.
+
+| | Responsibility |
+|---|---|
+| **Chinbuyan Tuvshintur** | Thermal design and energy modelling — energy balance, insulation, drying analysis, instrumentation and control — ESP32 firmware, mechanical design and fabrication — vessel, experimental design and analysis — test matrix  |
+| **Ariunsaikhan Batsaikhan** | Sensor integration, data logging |
+| **Tsenguun Battulga** | Agitator, shaft assembly, CAD, data integration |
+| **Zuliinbaysgalan Enebish** | Uncertainty, results |
+
+Responsibilities are stated because a project of this size cannot be honestly
+credited to any one of us. The commit history records who did what, and it is
+open to inspection.
+
 ## Why this repository exists
 
 Commercial food recyclers — Lomi, Vitamix FoodCycler, Reencle — cost $400–600
-and ship as sealed boxes. Their thermal design, their airflow rates, and their
-actual measured efficiency are not published.
+and ship as sealed boxes. Their thermal design, airflow rates, and measured
+efficiency are not published.
 
 The open-source landscape has adjacent work: Arduino compost *monitors*, several
-good precision dehydrator controllers, a body of academic literature on food
-waste drying kinetics. I could not find a project that connects them — one that
-documents a complete machine together with the sizing calculations that produced
-it and the performance data that tests them.
+capable precision dehydrator controllers, and a body of academic literature on
+food waste drying kinetics. We could not find a project connecting them — one
+documenting a complete machine together with the sizing calculations that
+produced it and the performance data that tests them.
 
-This is an attempt at that. It is built to a $225 budget, against a commercial
-equivalent costing $400–600, which is a constraint worth documenting in its own
-right.
+This is an attempt at that, built to a $225 budget against a commercial
+equivalent costing $400–600. The constraint is documented as a design parameter,
+not an apology.
 
 ## Scope, stated precisely
 
 This machine does **not** produce finished compost, and any five-hour machine
 claiming otherwise is overstating it. The output is dried, ground, odourless,
 volume-reduced organic material, stable enough to store for months. It becomes
-compost after 2–4 weeks of curing in soil — a biological process that needs no
+compost after 2–4 weeks of curing in soil — a biological process requiring no
 machine at all.
 
 ```
@@ -44,20 +59,19 @@ food waste
   → [ cure bin — 3 weeks ]   → compost
 ```
 
-The engineering claim here is thermal and mechanical. The biology happens
-downstream, where it belongs. Being exact about that boundary is the point.
+Our engineering claim is thermal and mechanical. The biology happens downstream,
+where it belongs. Being exact about that boundary is the point.
 
 ## The thermal argument
 
 About 75% of food waste by mass is water. Removing it dominates the energy
-budget so completely that every other design decision — heater rating,
-insulation thickness, vessel geometry, control strategy — is downstream of it.
+budget so completely that every other decision — heater rating, insulation
+thickness, vessel geometry, control strategy — is downstream of it.
 
-The non-obvious part is the coupling. Airflow is what physically carries water
-vapour out of the vessel, so drying rate scales with it. But the same airflow
-carries sensible heat out, so energy consumed per kilogram of water removed
-*also* scales with it. Faster drying and efficient drying pull in opposite
-directions.
+The non-obvious part is the coupling. Airflow physically carries water vapour
+out of the vessel, so drying rate scales with it. But the same airflow carries
+sensible heat out, so energy consumed per kilogram of water removed *also*
+scales with it. Fast drying and efficient drying pull in opposite directions.
 
 There is a real optimum. It depends on this machine's specific geometry and
 thermal mass, it cannot be derived from first principles, and it can only be
@@ -79,7 +93,7 @@ found by measurement. Locating it is the central experiment of this project.
 
 Reference points for specific energy: the theoretical floor set by the latent
 heat of vaporisation is 0.67 kWh/kg. Industrial indirect dryers achieve
-0.80–0.96. This design starts at a predicted 1.21 and the work is to drive it
+0.80–0.96. This design starts at a predicted 1.21, and the work is to drive it
 down.
 
 Full derivations with stated assumptions are in [`/calcs`](./calcs).
@@ -98,16 +112,16 @@ explained rather than quietly dropped.
 | 4 | Drying is predominantly falling-rate; any constant-rate period is short or absent | High | — |
 | 5 | The rotating shaft seal is the first mechanical component to fail | Moderate | — |
 
-Prediction 3 is the one I am least sure of and most interested in. It follows
-from the material passing through a dough-like phase as moisture drops, but I
-have not found direct measurements of it for food waste.
+Prediction 3 is the one we are least confident in and most interested in. It
+follows from the material passing through a dough-like phase as moisture drops,
+but we have found no direct measurement of it for food waste.
 
 ## Instrumentation
 
 The machine is built to produce data, not only output:
 
-- **Load cell beneath the vessel** — mass vs. time at 0.2 Hz. This yields the
-  drying curve directly, which is the primary dataset.
+- **Load cell beneath the vessel** — mass vs. time at 0.2 Hz, yielding the drying
+  curve directly. This is the primary dataset.
 - **Two thermocouples** (core, exhaust) — thermal behaviour and loss estimation.
 - **Inlet and exhaust humidity** — measured moisture pickup against the predicted
   Δω = 0.084 kg/kg dry air.
@@ -124,28 +138,27 @@ waste produces roughly 0.5–0.7 kg CO₂-equivalent through anaerobic methane.
 
 Within the uncertainty of those figures, **it is approximately a wash.**
 
-This is the least comfortable result in the project and it will be published
-with the grid emission factors it depends on, not buried. Two things follow
-from it.
+This is the least comfortable result in the project. It will be published with
+the grid emission factors it depends on, not buried. Two things follow.
 
 First, it constrains the honest use case. This machine is not for a household
-with space for a compost heap; there, it is strictly worse. It is for apartment
+with room for a compost heap; there it is strictly worse. It is for apartment
 housing, where the realistic alternative is landfill rather than composting.
-That is a narrower claim than "sustainable technology" and it is the one the
-data supports.
+That is a narrower claim than "sustainable technology," and it is the one our
+data can support.
 
 Second, it gives the efficiency work real stakes. Moving specific energy from
 1.21 to below 0.9 kWh/kg is the threshold at which the machine becomes
 defensible on its own terms rather than marginal. A counterflow exhaust heat
-exchanger is the planned route, and it will be evaluated as an A/B comparison
-on identical batches.
+exchanger is the planned route, evaluated as an A/B comparison on identical
+batches.
 
 ## Method
 
-Each phase ends at a measurable gate. The next phase does not begin until the
-gate passes. The ordering is deliberate: the thermal rig is built and
-characterised *before* any mechanism is added, so that a failure to dry can be
-attributed to thermal design rather than confounded with mixing or airflow.
+Each phase ends at a measurable gate. The next does not begin until the gate
+passes. The ordering is deliberate: the thermal rig is built and characterised
+*before* any mechanism is added, so a failure to dry can be attributed to
+thermal design rather than confounded with mixing or airflow.
 
 | Phase | Work | Gate |
 |---|---|---|
@@ -154,10 +167,10 @@ attributed to thermal design rather than confounded with mixing or airflow.
 | 2 | Airflow and exhaust | Energy-vs-airflow curve with visible optimum |
 | 3 | Agitation | Unattended cycle without jamming; torque curve |
 | 4 | Integration and closed-loop control | Three consecutive unattended cycles |
-| 5 | Characterisation | Test matrix with n ≥ 3 per condition and uncertainty |
-| 6 | Heat recovery | Measured Δ in specific energy, with/without |
+| 5 | Characterisation | Test matrix, n ≥ 3 per condition, stated uncertainty |
+| 6 | Heat recovery | Measured Δ in specific energy, with and without |
 
-Progress and dated session notes: [`/docs/build-log.md`](./docs/build-log.md).
+Dated session notes: [`/docs/build-log.md`](./docs/build-log.md).
 
 ## Repository structure
 
@@ -174,11 +187,12 @@ Progress and dated session notes: [`/docs/build-log.md`](./docs/build-log.md).
 This machine combines mains voltage, sustained heat, steam, and a powered blade.
 
 The heating element is deliberately not hand-wired. It is a commercial appliance
-switched by a solid-state relay, so its factory thermal protection and
-insulation remain intact — a design decision made specifically to remove the
-most hazardous fabrication step. Beyond that: an independent non-resettable
-thermal fuse in series with the heater, a residual-current device on the supply,
-and a hardware lid interlock on the motor that does not depend on firmware.
+switched by a solid-state relay, so its factory thermal protection and insulation
+remain intact — a decision made specifically to remove the most hazardous
+fabrication step from a student build. Beyond that: an independent
+non-resettable thermal fuse in series with the heater, a residual-current device
+on the supply, and a hardware lid interlock on the motor that does not depend on
+firmware.
 
 Full notes in [`/docs/safety.md`](./docs/safety.md). Read them before building
 from this.
@@ -197,8 +211,5 @@ under CERN-OHL-S v2.
 
 ---
 
-**Chinbuyan T.** — Ulaanbaatar, Mongolia  
-[github.com/chinbuyan](https://github.com/chinbuyan)
-
-*First prototype, first attempt. Where it is wrong, the corrections will be
-recorded here alongside the original claim.*
+*Ulaanbaatar, Mongolia. First prototype, first attempt. Where we are wrong, the
+correction will be recorded here alongside the original claim.*
