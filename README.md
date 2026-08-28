@@ -1,144 +1,201 @@
 # re:plate
 
-An open-source benchtop machine that dries and grinds household food waste
-into a stable, storable soil amendment feedstock in under five hours.
+An open-source benchtop machine that dries and grinds household food waste into
+a stable, storable soil amendment feedstock in under five hours.
 
-**Status:** Phase 0 — design and calculation. Nothing is built yet.
-**Budget:** $225 USD, all-in.
+**The claim this project tests:** converting food waste into fertiliser feedstock
+is a mass-transfer problem, not a biological one. The machine that does it is
+limited by how fast water vapour can leave the vessel — not by how much heat
+goes into it. Everything in this design follows from that.
+
+**Status:** Phase 0 — design and calculation. Nothing is built yet. Every
+calculation, every data run, and every failure will be published here as it
+happens, not reconstructed afterwards.
 
 ---
 
 ## Why this repository exists
 
 Commercial food recyclers — Lomi, Vitamix FoodCycler, Reencle — cost $400–600
-and ship as closed boxes. Plenty of Arduino compost *monitors* exist. Several
-good precision dehydrator controllers exist.
+and ship as sealed boxes. Their thermal design, their airflow rates, and their
+actual measured efficiency are not published.
 
-But I could not find a single open-source project that documents a complete
-food waste drying machine: the mechanical design, the sizing calculations, and
-the measured performance data, together, in one place.
+The open-source landscape has adjacent work: Arduino compost *monitors*, several
+good precision dehydrator controllers, a body of academic literature on food
+waste drying kinetics. I could not find a project that connects them — one that
+documents a complete machine together with the sizing calculations that produced
+it and the performance data that tests them.
 
-So I am building one and publishing all of it — including the parts that don't work.
+This is an attempt at that. It is built to a $225 budget, against a commercial
+equivalent costing $400–600, which is a constraint worth documenting in its own
+right.
 
-## What it does, and what it does not
+## Scope, stated precisely
 
-**It does not produce finished compost.** Anyone claiming a five-hour machine
-makes compost is overstating it.
-
-What comes out is dried, ground, odourless, volume-reduced organic material —
-stable enough to store for months. It becomes actual compost after 2–4 weeks
-of curing in soil or a compost bin, which needs no machine at all.
+This machine does **not** produce finished compost, and any five-hour machine
+claiming otherwise is overstating it. The output is dried, ground, odourless,
+volume-reduced organic material, stable enough to store for months. It becomes
+compost after 2–4 weeks of curing in soil — a biological process that needs no
+machine at all.
 
 ```
 food waste
-  → [ re:plate — 5 hours ]     → dried feedstock
-  → [ cure bin — 3 weeks ]     → compost
+  → [ re:plate — 5 hours ]   → dried feedstock
+  → [ cure bin — 3 weeks ]   → compost
 ```
 
-This machine is stage one. I am precise about that boundary because the
-engineering claim I am making is thermal and mechanical, not biological.
+The engineering claim here is thermal and mechanical. The biology happens
+downstream, where it belongs. Being exact about that boundary is the point.
 
-## The engineering thesis
+## The thermal argument
 
-**This machine is fundamentally a dryer.** About 75% of food waste by mass is
-water, and removing it dominates the entire energy budget. Everything else —
-the heater sizing, the blower, the insulation, the control loop — follows from
-that one fact.
+About 75% of food waste by mass is water. Removing it dominates the energy
+budget so completely that every other design decision — heater rating,
+insulation thickness, vessel geometry, control strategy — is downstream of it.
 
-The central design problem is that drying is **limited by mass transfer, not
-just heat**. Airflow has to physically carry water vapour out of the vessel,
-but that same airflow carries heat out too. More air dries faster and costs
-more energy per kilogram of water removed. Less air conserves heat and stalls
-the drying.
+The non-obvious part is the coupling. Airflow is what physically carries water
+vapour out of the vessel, so drying rate scales with it. But the same airflow
+carries sensible heat out, so energy consumed per kilogram of water removed
+*also* scales with it. Faster drying and efficient drying pull in opposite
+directions.
 
-There is a real optimum. It is specific to this machine's geometry, and it
-cannot be calculated from first principles — it has to be measured. Finding
-it is the point of this project.
+There is a real optimum. It depends on this machine's specific geometry and
+thermal mass, it cannot be derived from first principles, and it can only be
+found by measurement. Locating it is the central experiment of this project.
 
 ## Design targets
 
-| Parameter | Target |
-|---|---|
-| Batch capacity | 1.0 kg wet waste |
-| Cycle time | 4–5 hours |
-| Energy per cycle | 0.82 kWh |
-| Specific energy | 1.21 kWh per kg water removed |
-| Mass reduction | ~65% |
-| Heater | 400 W, duty-cycled |
-| Airflow | 150 L/min, PWM-adjustable |
-| Mixing torque | 2.7 N·m design, 12 N·m motor |
+| Parameter | Target | Basis |
+|---|---|---|
+| Batch capacity | 1.0 kg wet waste | Design point |
+| Cycle time | 4–5 hours | Energy balance |
+| Energy per cycle | 0.82 kWh | Q = 2 963 kJ at η ≈ 0.60 |
+| **Specific energy** | **1.21 kWh / kg water** | Primary optimisation metric |
+| Mass reduction | ~65% | 90% water removal |
+| Heater | 400 W, duty-cycled | 206 W mean over 4 h |
+| Airflow | 150 L/min, PWM-adjustable | 32 L/min theoretical minimum |
+| Mixing torque | 2.7 N·m design | τ_shear ≈ 15 kPa, r_eff = 50 mm |
+| Motor | ≥12 N·m | Sized for stall, not running load |
 
-For reference: industrial indirect dryers achieve 0.80–0.96 kWh/kg water. The
-theoretical floor set by the latent heat of vaporization is 0.67. Starting at
-1.21 and driving it down is the optimisation target.
+Reference points for specific energy: the theoretical floor set by the latent
+heat of vaporisation is 0.67 kWh/kg. Industrial indirect dryers achieve
+0.80–0.96. This design starts at a predicted 1.21 and the work is to drive it
+down.
 
-## What I am measuring
+Full derivations with stated assumptions are in [`/calcs`](./calcs).
 
-The machine is instrumented to produce data, not just output:
+## Predictions, recorded before building
 
-- **Load cell under the vessel** → mass vs. time, logged at 0.2 Hz. This gives
-  the drying curve directly.
-- **Two thermocouples** (core, exhaust) → thermal behaviour and loss estimation.
-- **Inlet and exhaust humidity** → actual moisture pickup vs. the predicted 0.084 kg/kg.
-- **Motor current** → mixing torque vs. moisture content. I expect a mid-cycle
-  peak when the material is dough-like, higher than at either wet or dry extremes.
+These are committed to now so that they can be shown wrong later. Each will be
+marked confirmed or refuted against measured data, with the discrepancy
+explained rather than quietly dropped.
 
-Planned outputs: drying curves across conditions, the energy-vs-airflow
-optimisation plot, and a torque-vs-moisture curve.
+| # | Prediction | Confidence | Result |
+|---|---|---|---|
+| 1 | Specific energy lands between 1.10 and 1.40 kWh/kg water | Moderate | — |
+| 2 | An airflow optimum exists, between 80 and 150 L/min | High | — |
+| 3 | Mixing torque peaks mid-cycle, exceeding both the wet and dry extremes | Moderate | — |
+| 4 | Drying is predominantly falling-rate; any constant-rate period is short or absent | High | — |
+| 5 | The rotating shaft seal is the first mechanical component to fail | Moderate | — |
 
-## Honest accounting
+Prediction 3 is the one I am least sure of and most interested in. It follows
+from the material passing through a dough-like phase as moisture drops, but I
+have not found direct measurements of it for food waste.
 
-At roughly 0.8 kWh per kilogram of waste, on a coal-heavy grid this machine
-emits about as much CO₂ as landfilling the same waste would. That is not a
-comfortable result and I am not going to bury it.
+## Instrumentation
 
-Two things follow. First, the machine's real use case is apartments, where the
-alternative is landfill rather than a compost pile. Second, it means the
-efficiency work has actual stakes — getting specific energy from 1.21 to below
-0.9 kWh/kg is what makes the machine defensible. A counterflow exhaust heat
-exchanger is the planned route there.
+The machine is built to produce data, not only output:
 
-I will publish the lifecycle numbers either way.
+- **Load cell beneath the vessel** — mass vs. time at 0.2 Hz. This yields the
+  drying curve directly, which is the primary dataset.
+- **Two thermocouples** (core, exhaust) — thermal behaviour and loss estimation.
+- **Inlet and exhaust humidity** — measured moisture pickup against the predicted
+  Δω = 0.084 kg/kg dry air.
+- **Motor current** — mixing torque as a function of moisture content.
+
+Planned analysis: drying curves fitted against the Midilli model, the
+energy-vs-airflow optimisation surface, and the torque-vs-moisture relationship.
+
+## The number that does not flatter this project
+
+At roughly 0.8 kWh per kilogram of waste processed, on a coal-dominated grid
+this machine emits on the order of 0.6 kg CO₂ per batch. Landfilling the same
+waste produces roughly 0.5–0.7 kg CO₂-equivalent through anaerobic methane.
+
+Within the uncertainty of those figures, **it is approximately a wash.**
+
+This is the least comfortable result in the project and it will be published
+with the grid emission factors it depends on, not buried. Two things follow
+from it.
+
+First, it constrains the honest use case. This machine is not for a household
+with space for a compost heap; there, it is strictly worse. It is for apartment
+housing, where the realistic alternative is landfill rather than composting.
+That is a narrower claim than "sustainable technology" and it is the one the
+data supports.
+
+Second, it gives the efficiency work real stakes. Moving specific energy from
+1.21 to below 0.9 kWh/kg is the threshold at which the machine becomes
+defensible on its own terms rather than marginal. A counterflow exhaust heat
+exchanger is the planned route, and it will be evaluated as an A/B comparison
+on identical batches.
+
+## Method
+
+Each phase ends at a measurable gate. The next phase does not begin until the
+gate passes. The ordering is deliberate: the thermal rig is built and
+characterised *before* any mechanism is added, so that a failure to dry can be
+attributed to thermal design rather than confounded with mixing or airflow.
+
+| Phase | Work | Gate |
+|---|---|---|
+| 0 | Calculation and specification | Written spec; parts ordered against it |
+| 1 | Thermal rig — no motor, no blower | ≥45% mass loss, core held at 65 ± 5 °C |
+| 2 | Airflow and exhaust | Energy-vs-airflow curve with visible optimum |
+| 3 | Agitation | Unattended cycle without jamming; torque curve |
+| 4 | Integration and closed-loop control | Three consecutive unattended cycles |
+| 5 | Characterisation | Test matrix with n ≥ 3 per condition and uncertainty |
+| 6 | Heat recovery | Measured Δ in specific energy, with/without |
+
+Progress and dated session notes: [`/docs/build-log.md`](./docs/build-log.md).
 
 ## Repository structure
 
 ```
-/calcs        — sizing calculations, worked with stated assumptions
-/cad          — Fusion 360 models, drawings, exports
-/firmware     — ESP32 controller
-/data         — raw logs from every run, including failed ones
-/docs         — build log, wiring, bill of materials
+/calcs      sizing calculations, assumptions stated, units carried
+/cad        Fusion 360 models, drawings, exports
+/firmware   ESP32 controller
+/data       raw logs from every run, including failed ones
+/docs       build log, wiring, bill of materials, safety notes
 ```
-
-## Build phases
-
-- [ ] **Phase 0** — Calculations and specification
-- [ ] **Phase 1** — Thermal test rig (no motor, no blower) → first drying curve
-- [ ] **Phase 2** — Airflow and exhaust → energy-vs-airflow optimum
-- [ ] **Phase 3** — Agitation → torque characterisation
-- [ ] **Phase 4** — Integration and closed-loop control
-- [ ] **Phase 5** — Characterisation and repeat testing
-- [ ] **Phase 6** — Heat recovery (stretch)
-
-Each phase ends at a measurable gate. I do not start the next one until the
-gate passes.
 
 ## Safety
 
-This machine combines mains voltage, sustained heat, steam, and a powered
-blade. The heating element is not hand-wired — it is a commercial appliance
-switched by an SSR, so its factory thermal protection stays intact. There is
-an independent non-resettable thermal fuse, an RCD on the supply, and a
-hardware lid interlock on the motor.
+This machine combines mains voltage, sustained heat, steam, and a powered blade.
 
-Full notes in `/docs/safety.md`. If you build from this, read them first.
+The heating element is deliberately not hand-wired. It is a commercial appliance
+switched by a solid-state relay, so its factory thermal protection and
+insulation remain intact — a design decision made specifically to remove the
+most hazardous fabrication step. Beyond that: an independent non-resettable
+thermal fuse in series with the heater, a residual-current device on the supply,
+and a hardware lid interlock on the motor that does not depend on firmware.
+
+Full notes in [`/docs/safety.md`](./docs/safety.md). Read them before building
+from this.
+
+## Prior work
+
+- Drying kinetics of household food waste — [PubMed 26507489](https://pubmed.ncbi.nlm.nih.gov/26507489/)
+- Energy consumption of agricultural dryers — [CIGR Journal](https://cigrjournal.org/index.php/Ejounral/article/download/3863/2494/0)
+- Precision dehydrator control — [truglodite/Dehydrator](https://github.com/truglodite/Dehydrator)
+- ESP32 rice dryer — [qppd/Rice-Dryer](https://github.com/qppd/Rice-Dryer)
 
 ## License
 
-Apache 2.0 for firmware. Documentation under CC BY-SA 4.0. Hardware designs
+Firmware under Apache 2.0. Documentation under CC BY-SA 4.0. Hardware designs
 under CERN-OHL-S v2.
 
 ---
 
-*Built in Ulaanbaatar, Mongolia. This is a student project and a first
-prototype — expect it to be wrong in places, and expect me to say so when it is.*
+*Built in Ulaanbaatar, Mongolia. First prototype, first attempt. Where it is
+wrong, the corrections will be recorded here alongside the original claim.*
