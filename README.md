@@ -20,10 +20,10 @@ Four co-founders. Ulaanbaatar, Mongolia.
 
 | | Responsibility |
 |---|---|
-| **Chinbuyan Tuvshintur** | Thermal design and energy modelling — energy balance, insulation, drying analysis, instrumentation and control — ESP32 firmware, mechanical design and fabrication — vessel, experimental design and analysis — test matrix  |
-| **Ariunsaikhan Batsaikhan** | Sensor integration, data logging |
-| **Tsenguun Battulga** | Agitator, shaft assembly, CAD, data integration |
-| **Zuliinbaysgalan Enebish** | Uncertainty, results |
+| **Chinbuyan Tuvshintur** | Thermal design and energy modelling — energy balance, insulation, drying analysis |
+| **Ariunsaikhan Batsaikhan** | Instrumentation and control — ESP32 firmware, sensor integration, data logging |
+| **Tsenguun Battulga** | Mechanical design and fabrication — vessel, agitator, shaft assembly, CAD |
+| **Zuliinbaysgalan Enebish** | Experimental design and analysis — test matrix, uncertainty, results |
 
 Responsibilities are stated because a project of this size cannot be honestly
 credited to any one of us. The commit history records who did what, and it is
