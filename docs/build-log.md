@@ -3,70 +3,82 @@
 One dated entry per working session, including sessions where nothing worked.
 Reconstructing this later is impossible; keeping it costs ten minutes a session.
 
+Entries before 28 August 2026 were written retrospectively on 1 September 2026
+and are dated from memory — the repository did not exist yet, so there are no
+timestamps to recover them from. Entries from 28 August onward are verifiable
+against this repository's commit history. Where a date is approximate it is
+marked as such rather than given false precision.
+
 Newest entries at the bottom.
 
-Dates from 2026-08-28 onward are verifiable against this repository's commit
-history. The reframing entry predates the repository and is dated from memory —
-see the note on it.
+---
+
+## 2026-06-12 — Project started: composting
+
+Began collecting food waste from a restaurant and composting it to produce
+liquid fertiliser.
+
+Batches ran 1–2.5 months each. Tracked temperature and yield throughout. Odour
+was the main practical problem and we worked on it specifically — successfully;
+later batches smelled substantially less than the first.
+
+> **Gap:** the temperature and yield figures from this period are not yet in
+> this repository. They should be. Whoever holds those notes, add them to
+> `/data` with the dates and batch conditions.
 
 ---
 
-## 2026-08 — Project reframed from composting to a machine
+## 2026-06 to 2026-08 — Composting, and what it taught us
 
-> **Exact date not recorded.** This decision predates the repository, so there
-> is no timestamp to recover it from. Dated to the month rather than invented to
-> the day. If someone remembers the week, narrow it.
+The composting worked. The fertiliser is real and is currently being tested on
+flowers and vegetables to confirm it performs against a control.
 
-Original concept was a food waste → бордоо composting project. Reframed as a
-mechanical engineering build: the interesting problem is not that decomposition
-happens, it is designing a machine that accelerates and controls it.
+But over two months the pattern was unmistakable: **months of attention for a
+small amount of output.** Slow, effortful, and inconvenient enough that no
+household would sustain it. Every batch needed manual turning, monitoring, and
+patience, and the reward-to-effort ratio was poor.
 
-Reasoning: composting as a topic is well covered and biological. Thermal
-management, mass transfer, machine design, and closed-loop control are the parts
-we can actually engineer and measure.
+The conclusion we drew, roughly mid-July: the bottleneck is not the biology.
+The biology works fine. The bottleneck is that the tedious mechanical part —
+breaking material down, holding it warm, moving air through it — is being done
+by hand.
 
----
-
-## 2026-08-28 — Process selection: dryer over inoculated digester
-
-Two viable architectures were considered.
-
-**A — fast-cycle dryer + grinder** (Lomi / FoodCycler approach). Grind, heat,
-dry to a stable soil amendment in 4–6 hours.
-
-**B — inoculated warm digester** (Reencle approach). Hold ~50 °C with a
-microbial inoculum for 24 h+, output closer to finished compost.
-
-**Chose A.** The deciding argument was not cost — the two are within roughly
-$100 of each other. It was determinism and iteration rate:
-
-| | A: dryer | B: digester |
-|---|---|---|
-| Cycle time | 6 h | 24 h+ |
-| Culture establishment | none | 1–2 weeks |
-| Runs possible in 10 weeks | 30–50 | 6–10 |
-| Failed run interpretable? | yes | often not |
-
-The dryer is governed by physics we can calculate and verify. The digester adds
-biological failure modes we cannot diagnose — a dead culture gives one signal
-and a dozen candidate causes. Critically, the *mechanical* engineering content
-is nearly identical in both, so B would cost significant risk for almost no
-additional value in the discipline we are working in.
-
-Anaerobic digestion was ruled out earlier for methane handling and cycle length.
+That is a machine's job.
 
 ---
 
-## 2026-08-28 — Scale and budget revised
+## 2026-07-15 (approx.) — Started building the machine
 
-Batch size reduced from 2.0 kg to 1.0 kg; budget from $443 to $225.
+Began prototype v1: blade agitator, resistive heater, extraction fan.
 
-Key cost decisions:
-- Vessel and heater sourced as a used rice cooker rather than separate
-  components — $12 instead of ~$55, and it preserves factory thermal protection
-- Salvaged ATX power supply instead of a purchased PSU
-- Plywood frame instead of aluminium extrusion
-- 30% held as contingency, deliberately
+Design was intuition-led rather than calculated. We built what seemed
+reasonable and made it work.
+
+---
+
+## 2026-07 to 2026-08 — v1 running, three faults identified
+
+**It works.** v1 dries and grinds food waste. That is the headline and it is
+genuinely encouraging.
+
+Three faults, in the order they matter:
+
+**1. Overheating.** Core temperature runs above target with no stable setpoint.
+The heater is not duty-cycled against a measured temperature — it is essentially
+open-loop. This is a fire risk and is being treated as one.
+
+**2. Anomalies under load.** Behaviour is inconsistent mid-cycle in ways we
+cannot characterise. And we cannot diagnose it, because **v1 has no sensors and
+logs nothing.** We can describe the symptom and nothing more.
+
+**3. Oversized and inefficient.** The vessel is medium-to-large, and for the
+batch size it actually processes that is too much thermal mass and too much
+heat-loss area. Energy in, output out — the ratio is poor.
+
+The second fault is the one that changed how we work. **Building without
+instrumentation means faults can be observed but not explained.** v2 is
+instrumented from the start, and Phase 1 is putting sensors on v1 before
+changing anything mechanical, so there is a baseline to improve against.
 
 ---
 
@@ -76,38 +88,59 @@ Set up the `replate-lab` organisation and this repository. Responsibilities
 assigned across the four of us and recorded in the main README. Apache 2.0
 licence applied with all four names on the copyright line.
 
-**Motor selection corrected.** Initial instinct was a JGY-370 worm gearmotor,
-the common choice in projects like this. Running the torque numbers showed it
-delivers ~1.4 N·m against a 2.7 N·m design load — it would stall on the first
-sticky batch. Specified a salvaged automotive wiper motor (~12 N·m) instead.
+**Motor selection corrected.** Initial instinct for v2 was a JGY-370 worm
+gearmotor, the common choice in projects like this. Running the torque numbers
+showed it delivers ~1.4 N·m against a 2.7 N·m design load — it would stall on
+the first sticky batch. Specified a salvaged automotive wiper motor (~12 N·m)
+instead.
 
-This is exactly the kind of error the calculations exist to catch, and it was
-caught before any money was spent. It is the first entry in this log that
-justifies doing the arithmetic before the shopping.
+Caught before any money was spent. First entry in this log that justifies doing
+the arithmetic before the shopping.
 
 ---
 
 ## 2026-08-30 — Phase 0 documentation committed
 
-Committed the design work behind the decisions above:
+Committed the design work behind the v2 decisions:
 
-- `/calcs` — three sizing calculations worked at the 1.0 kg design point, with
-  every assumption stated and tagged A1–A5 against the phase that will measure it
-- `/docs/bom.md` — bill of materials with sourcing and a phase-by-phase order
-  sequence, so mechanical parts are not bought before thermal data exists
-- `/docs/safety.md` — hazard register, with a column recording whether each
-  mitigation depends on firmware. Four of eight do not, by design.
+- `/calcs` — three sizing calculations at the 1.0 kg design point, every
+  assumption stated and tagged A1–A5 against the phase that will measure it
+- `/docs/bom.md` — bill of materials with sourcing and phase-by-phase ordering
+- `/docs/safety.md` — hazard register, recording whether each mitigation depends
+  on firmware. Four of eight do not, by design.
 - `/docs/prior-art.md` — commercial, open-source and academic review
 - `/firmware` — ESP32 controller, written but not yet run on hardware
-- Five predictions recorded in the README before building begins
+
+**The energy balance explains fault 3.** Heat loss scales with surface area
+while useful work scales with load; an oversized vessel loses the argument
+before it starts. The fix the numbers point at is a *smaller vessel*, not a
+bigger heater — the opposite of the intuitive response, and the reason the
+v2 design point is 1.0 kg.
 
 Also corrected two structural errors from the 28th: `calcs/README.md` held only
 a 197-byte stub, and `build-log.md` had been created at `calcs/docs/` instead of
 `docs/`.
 
-**Next:** order Phase 1 parts (~$44, long lead time from AliExpress); source
-rice cooker, wiper motor and ATX supply locally (~$29). Each of us to re-derive
-the three calculations independently before parts arrive.
+---
+
+## 2026-09-01 — Corrected the record
+
+The README described the project as Phase 0 with nothing built. That was wrong.
+v1 has been running since July and the composting work has been running since
+June.
+
+The error understated the project rather than overstating it, but it removed the
+most important thing in it: **the reason a machine exists at all.** Without the
+composting months, "we decided to build a dryer" is an idea. With them, it is a
+conclusion drawn from two months of doing the work by hand.
+
+Rewritten to state the real timeline, v1's three faults, and what they changed
+about how we work. Added Predictions 6 and 7, both drawn directly from v1's
+observed behaviour.
+
+**Next:** order Phase 1 parts (~$44, long lead from AliExpress); source rice
+cooker, wiper motor and ATX supply locally (~$29). Instrument v1 and get a
+baseline before touching anything mechanical.
 
 ---
 

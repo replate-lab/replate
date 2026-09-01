@@ -3,7 +3,21 @@
 Raw logs from every run, including failed ones.
 
 **Lead:** Zuliinbaysgalan Enebish
-**Status:** Empty. No runs yet — the machine is not built.
+**Status:** Empty, and it should not be.
+
+Two bodies of real data exist outside this repository and need to be brought in:
+
+1. **Composting logs, June–August 2026** — temperature and yield across batches
+   of 1–2.5 months, plus the odour-reduction work. Held in personal notes.
+2. **Ongoing germination trial** — the liquid fertiliser is currently being
+   tested on flowers and vegetables. Needs a control, dated photographs, and
+   a recorded outcome.
+
+Neither is machine data, and both are evidence. Add them with dates and batch
+conditions.
+
+**Prototype v1 produces no data at all** — it carries no sensors. Instrumenting
+it for a baseline is Phase 1, before any mechanical change to v2.
 
 ---
 
