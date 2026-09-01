@@ -1,39 +1,71 @@
-# Composting data, June–August 2026
+# Composting programme, June–August 2026
 
-Restaurant food waste → liquid fertiliser. Batches of 1–2.5 months. Temperature
-and yield tracked; odour reduction worked on deliberately and achieved.
-
-**This data exists in personal notes and has not been transcribed yet.**
-
-It is not reconstructed here, and it will not be estimated. Numbers in this
-directory come from the notebook or they do not appear. A gap that is labelled
-is recoverable; an invented figure that later gets quoted is not.
+Restaurant food waste → liquid fertiliser. The work that preceded the machine
+and established why one was needed.
 
 ---
 
-## What to transcribe
+## The programme
 
-Fill [`batch-log.csv`](./batch-log.csv) from the notebook. Copy the template
-below into a new file of that name and add one row per observation.
+Starting **12 June 2026**, food waste was collected from a restaurant and
+composted to produce liquid fertiliser. Batches ran **1 to 2.5 months** each,
+managed by hand throughout: collection, loading, turning, monitoring, and
+drawing off the liquid product.
 
-If a field was not recorded, leave it **empty**. Do not guess and do not
-interpolate — an empty cell is information, a plausible-looking invented number
-is not.
+## What it established
+
+**The process works.** Usable liquid fertiliser was produced from restaurant
+food waste across multiple batches.
+
+**Odour was the principal practical problem, and it was solved.** Early batches
+smelled strongly. This was worked on deliberately across subsequent batches and
+the odour was substantially reduced.
+
+**The effort-to-output ratio is poor.** Months of sustained attention produced
+a small quantity of fertiliser. The process required repeated manual
+intervention and could not be left alone — inconvenient enough that no
+household would sustain it. This is a finding about the *process*, not about
+the biology.
+
+## What followed
+
+By mid-July the conclusion was that the limiting factor was not biological. The
+decomposition works. What makes the process impractical is that the mechanical
+work — breaking material down, holding it warm, moving air through it — is done
+by hand.
+
+Machine construction began **15 July 2026**. See
+[`../../docs/build-log.md`](../../docs/build-log.md).
+
+## Still running
+
+The liquid fertiliser from this programme is being tested on flowers and
+vegetables. Protocol, control design, and the Zucconi maturity index:
+[`../../docs/germination-trial.md`](../../docs/germination-trial.md).
+
+---
+
+## Logging standard
+
+Batches from here on are logged to `batch-log.csv` in this directory, one row
+per observation.
 
 ### Columns
 
 | Column | Unit | Notes |
 |---|---|---|
-| `date` | YYYY-MM-DD | Approximate is fine; mark it in `notes` |
+| `date` | YYYY-MM-DD | |
 | `batch_id` | — | `B1`, `B2`, … one per composting run |
 | `day` | days | Days since that batch started |
-| `temp_c` | °C | Where measured — surface or core? Say which in `notes` |
-| `ambient_c` | °C | If recorded |
-| `input_kg` | kg | Waste added, cumulative or that day |
+| `temp_c` | °C | State in `notes` whether surface or core |
+| `ambient_c` | °C | |
+| `input_kg` | kg | Waste added |
 | `output_l` | L | Liquid fertiliser drawn off |
-| `odour` | 0–5 | 0 = none, 5 = strong. Whoever scored it, be consistent |
-| `ph` | — | If measured |
-| `notes` | text | Anything unusual — turning, additions, weather, smell change |
+| `odour` | 0–5 | 0 = none, 5 = strong. One scorer per batch, for consistency |
+| `ph` | — | |
+| `notes` | text | Turning, additions, weather, any change in smell |
+
+If a field was not measured, leave it **empty**. An empty cell is information.
 
 ### Per batch, also record
 
@@ -51,35 +83,26 @@ Where kept (indoor/outdoor, temperature range):
 What we changed from the previous batch:
 ```
 
-That last line is the most valuable one. The odour reduction happened because
-something was changed between batches — recording *what* turns a two-month
-effort into a result.
+That last line carries the most weight. Improvements between batches — the
+odour reduction being the clearest example — only become transferable results
+if the change responsible is written down.
 
----
+### Template
 
-## Why this matters more than it looks
-
-Two months of temperature data across multiple batches is a real dataset. Very
-few student projects have anything comparable, and it does three things the
-machine work cannot:
-
-1. **It establishes the baseline the machine is compared against.** "The machine
-   is faster" is an assertion until there is a number for how long the manual
-   process took.
-2. **It is the evidence for the pivot.** The README argues that composting
-   worked but cost too much effort for too little output. This data is what
-   supports that claim.
-3. **It is prior art we generated ourselves.** The odour reduction in particular
-   — that was a solved problem, and the solution is worth writing down.
-
----
-
-## Template
-
-Save as `batch-log.csv` in this directory:
+Save as `batch-log.csv`:
 
 ```csv
 date,batch_id,day,temp_c,ambient_c,input_kg,output_l,odour,ph,notes
 ```
 
-Header only. Add rows from the notebook.
+---
+
+## Running the manual process alongside the machine
+
+The most valuable measurement available to this project is a **direct
+comparison**: the same restaurant waste, the same week, processed by hand and
+by machine, both logged.
+
+That gives a like-for-like figure for time, effort, and output — the claim the
+whole project rests on, measured rather than asserted. Worth starting a batch
+for that purpose alone.

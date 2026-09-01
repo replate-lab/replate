@@ -22,9 +22,8 @@ Batches ran 1–2.5 months each. Tracked temperature and yield throughout. Odour
 was the main practical problem and we worked on it specifically — successfully;
 later batches smelled substantially less than the first.
 
-> **Gap:** the temperature and yield figures from this period are not yet in
-> this repository. They should be. Whoever holds those notes, add them to
-> `/data` with the dates and batch conditions.
+Programme detail and the logging standard for batches going forward:
+[`../data/composting-2026-06/`](../data/composting-2026-06)
 
 ---
 
