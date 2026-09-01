@@ -9,12 +9,17 @@ Two bodies of real data exist outside this repository and need to be brought in:
 
 1. **Composting logs, June–August 2026** — temperature and yield across batches
    of 1–2.5 months, plus the odour-reduction work. Held in personal notes.
-2. **Ongoing germination trial** — the liquid fertiliser is currently being
-   tested on flowers and vegetables. Needs a control, dated photographs, and
-   a recorded outcome.
+   Transcription schema and instructions:
+   [`composting-2026-06/`](./composting-2026-06)
+2. **Germination trial** — the liquid fertiliser is being tested on flowers and
+   vegetables. Protocol, control design, and the Zucconi maturity index:
+   [`../docs/germination-trial.md`](../docs/germination-trial.md)
 
-Neither is machine data, and both are evidence. Add them with dates and batch
-conditions.
+Neither is machine data, and both are evidence.
+
+**Nothing in this directory is estimated.** Where a measurement was not taken,
+the field stays empty and the gap is named. A labelled gap can be filled later;
+an invented number that gets quoted downstream cannot be pulled back.
 
 **Prototype v1 produces no data at all** — it carries no sensors. Instrumenting
 it for a baseline is Phase 1, before any mechanical change to v2.
