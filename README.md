@@ -14,6 +14,13 @@ anomalies under load that we cannot yet diagnose, and is oversized badly enough
 to be inefficient. **v2 is being designed to fix those three faults**, and this
 repository documents that work as it happens.
 
+> **On this repository's history.** Work began in June 2026; the repository was
+> opened on 28 August 2026, roughly two and a half months in. Entries dated
+> before then are recorded retrospectively and are marked as such in the build
+> log. Everything from 28 August onward is contemporaneous and timestamped in
+> the commit history. We started documenting later than we should have, which
+> is its own lesson and is why the logging standards in `/data` now exist.
+
 ---
 
 ## Team
@@ -67,6 +74,8 @@ of the intuitive fix.
 **v1 has no sensors and produces no data.** It cannot tell us why it misbehaves,
 and it cannot give us a baseline to prove v2 is any better. Instrumenting it is
 the first thing we do, before changing anything mechanical.
+
+As-built photographs and dimensions: [`/docs/v1`](./docs/v1).
 
 ## Why this repository exists
 
@@ -222,11 +231,15 @@ Dated session notes: [`/docs/build-log.md`](./docs/build-log.md).
 ## Repository structure
 
 ```
-/calcs      sizing calculations, assumptions stated, units carried
-/cad        Fusion 360 models, drawings, exports
-/firmware   ESP32 controller
-/data       raw logs from every run, including failed ones
-/docs       build log, wiring, bill of materials, safety notes
+/calcs                    sizing calculations, assumptions stated, units carried
+/cad                      Fusion 360 models, drawings, exports
+/firmware                 ESP32 controller
+/data                     raw logs from every run, including failed ones
+  composting-2026-06/     the manual process, and its logging standard
+/docs                     build log, bill of materials, safety
+  v1/                     as-built photographs and dimensions
+  germination-trial.md    fertiliser maturity protocol
+  prior-art.md            commercial, open-source and academic review
 ```
 
 ## Safety

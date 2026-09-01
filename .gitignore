@@ -1,0 +1,40 @@
+# OS and cloud sync artefacts
+# This working copy lives inside OneDrive, which leaves these behind
+desktop.ini
+Thumbs.db
+ehthumbs.db
+.DS_Store
+*~
+
+# Fusion 360
+*.f3d.bak
+AutoSave/
+*.f3z.lock
+
+# Arduino / PlatformIO build output
+build/
+.pio/
+.pioenvs/
+.piolibdeps/
+*.elf
+*.hex
+*.bin
+
+# Python analysis scratch
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Large or transient media — keep resized copies, not originals
+*.mp4
+*.mov
+*.raw
+*.CR2
+*.NEF
