@@ -10,7 +10,7 @@ and the academic literature.
 
 | Product | Price | Approach |
 |---|---|---|
-| Lomi | ~$500 | Heat to 55–60 °C, rotating blade, airflow, carbon filter. Marketed with a microbial additive. |
+| Lomi | ~$500 | Heat to 55-60 °C, rotating blade, airflow, carbon filter. Marketed with a microbial additive. |
 | Vitamix FoodCycler | ~$400 | Heat, grind, dry. Closest in principle to this design. |
 | Reencle | ~$500 | Inoculated warm digester held near 50 °C, continuous feed. Different process. |
 
@@ -25,17 +25,17 @@ inventing the approach; we are documenting and measuring it.
 
 ## Open-source adjacent work
 
-**Arduino composting monitors** — element14, Hackster, several university
+**Arduino composting monitors**, element14, Hackster, several university
 projects. These instrument a compost bin with temperature, moisture, and gas
 sensors. They *observe* decomposition; they do not accelerate it. Useful as
 sensor-integration references, not as machine designs.
 
-**Precision dehydrator controllers** — [truglodite/Dehydrator](https://github.com/truglodite/Dehydrator),
+**Precision dehydrator controllers**, [truglodite/Dehydrator](https://github.com/truglodite/Dehydrator),
 [qppd/Rice-Dryer](https://github.com/qppd/Rice-Dryer), and several ESP32-based
 food dehydrator projects. These solve closed-loop thermal control well and are
 directly applicable to our Phase 1 and Phase 4 work.
 
-**Rice cooker / appliance hacking** — well documented, particularly for sous
+**Rice cooker / appliance hacking**, well documented, particularly for sous
 vide. Establishes the SSR-switching-a-commercial-appliance pattern that our
 safety analysis depends on.
 
@@ -55,14 +55,14 @@ Findings we rely on:
 [CIGR Journal](https://cigrjournal.org/index.php/Ejounral/article/download/3863/2494/0)
 
 Establishes our efficiency benchmark: indirect drying equipment consumes
-800–955 kWh per tonne of water evaporated, i.e. 0.80–0.96 kWh/kg. This is the
+800-955 kWh per tonne of water evaporated, i.e. 0.80-0.96 kWh/kg. This is the
 number our design is measured against.
 
 **Thin-layer drying literature, general**
 
 Most food materials dry predominantly in the *falling-rate* period, with a short
 or entirely absent constant-rate period. This informs Prediction 4 and shapes
-how we will annotate our own drying curves — we expect diffusion-limited
+how we will annotate our own drying curves, we expect diffusion-limited
 behaviour throughout, not a classical two-phase curve.
 
 ---
@@ -80,7 +80,7 @@ Each piece exists separately. The connection between them does not appear to be
 published anywhere we could reach.
 
 **This is stated as what our search found, not as an absolute claim.** If such a
-project exists and we missed it, we would like to know — open an issue and we
+project exists and we missed it, we would like to know, open an issue and we
 will cite it here.
 
 ---

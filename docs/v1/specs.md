@@ -1,6 +1,6 @@
-# Prototype v1 — as-built specification
+# Prototype v1, as-built specification
 
-Measured, not estimated. Leave a field blank rather than guessing — a blank is
+Measured, not estimated. Leave a field blank rather than guessing, a blank is
 a task, a guess is an error that gets quoted later.
 
 **Measured by:**
@@ -71,16 +71,16 @@ a task, a guess is an error that gets quoted later.
 ## Observed behaviour
 
 Describe what actually happens, in plain terms. Approximate is fine here as
-long as it is labelled approximate — this section is observation, not
+long as it is labelled approximate, this section is observation, not
 measurement.
 
-**Overheating** — at what point in the cycle, how hot does it feel or read,
+**Overheating**, at what point in the cycle, how hot does it feel or read,
 what happens next:
 
-**Anomalies under load** — what exactly is inconsistent, and under what
+**Anomalies under load**, what exactly is inconsistent, and under what
 conditions:
 
-**Efficiency** — how long a cycle takes, how much material goes in, how much
+**Efficiency**, how long a cycle takes, how much material goes in, how much
 comes out:
 
 ---
@@ -93,7 +93,7 @@ is a smaller machine, and it needs real numbers on the left.
 | Parameter | v1 as built | v2 target |
 |---|---|---|
 | Batch capacity | | 1.0 kg |
-| Cycle time | | 4–5 h |
+| Cycle time | | 4-5 h |
 | Heater rating | | 400 W duty-cycled |
 | Temperature control | | Closed loop, hysteresis ±3 °C |
 | Instrumentation | none | Load cell, 2 × temperature, 2 × humidity, motor current |

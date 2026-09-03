@@ -24,7 +24,7 @@ measured data in Phase 1 and Phase 2.
 | c_p | 3.5 kJ/kg·K | Wet organic mass, literature value |
 | h_fg | 2400 kJ/kg | Evaporation near 60 °C |
 | ΔT | 45 K | 20 °C ambient → 65 °C target |
-| η_system | 0.60 | Assumed — see note below |
+| η_system | 0.60 | Assumed, see note below |
 
 ### Working
 
@@ -67,7 +67,7 @@ Comparison points:
 | | kWh/kg water |
 |---|---|
 | Theoretical floor (latent heat only) | 0.67 |
-| Industrial indirect dryers | 0.80 – 0.96 |
+| Industrial indirect dryers | 0.80-0.96 |
 | **This design (predicted)** | **1.21** |
 
 The gap between 1.21 and 0.96 is the optimisation target for Phase 6.
@@ -77,8 +77,8 @@ The gap between 1.21 and 0.96 is the optimisation target for Phase 6.
 This is the weakest assumption in the calculation and it is a guess, not a
 derivation. It bundles wall conduction loss, the sensible heat carried out in
 the exhaust stream, and start-up transient. A small vessel has a poor
-surface-to-volume ratio, so 0.60 is chosen conservatively — lower than the
-0.65–0.75 typical of larger equipment.
+surface-to-volume ratio, so 0.60 is chosen conservatively, lower than the
+0.65-0.75 typical of larger equipment.
 
 **Phase 1 measures this directly.** If the measured value differs materially
 from 0.60, this section will be revised and the original left visible.
@@ -96,7 +96,7 @@ vapour out of the vessel. This calculation sizes that airflow.
 |---|---|---|
 | T_exhaust | 65 °C | Assumed at equilibrium |
 | ω_sat @ 65 °C | 0.18 kg/kg dry air | Psychrometric |
-| pickup efficiency | 0.50 | Assumed — exhaust is not saturated |
+| pickup efficiency | 0.50 | Assumed, exhaust is not saturated |
 | ω_out | 0.090 kg/kg | |
 | ω_in | 0.006 kg/kg | 20 °C, 40% RH ambient |
 | ρ_air @ 65 °C | 1.04 kg/m³ | |
@@ -141,7 +141,7 @@ vessel, raising kWh per kg of water removed. Less airflow conserves heat but
 stalls drying. Drying *rate* and drying *efficiency* are in direct opposition.
 
 An optimum exists. It depends on this machine's specific geometry and thermal
-mass, and it cannot be derived here — it must be measured. **Phase 2 finds it**
+mass, and it cannot be derived here, it must be measured. **Phase 2 finds it**
 by running identical batches at four airflow settings and measuring both drying
 time and specific energy.
 
@@ -192,16 +192,16 @@ Running load is only ~13 W
 ### Why running power is the wrong criterion
 
 13 W suggests a small motor. That reasoning kills the machine. It does not fail
-under steady load — it fails when it **jams**, and jam torque is what must be
+under steady load, it fails when it **jams**, and jam torque is what must be
 survived.
 
 Worked example of the trap: the widely available `JGY-370` worm gearmotor is a
 common choice for projects like this. It delivers roughly **1.4 N·m** running
-and 2.5 N·m stall — well under the 2.7 N·m design load, let alone the 5.4 N·m
+and 2.5 N·m stall, well under the 2.7 N·m design load, let alone the 5.4 N·m
 with margin. It would stall on the first sticky batch.
 
 A salvaged automotive windscreen wiper motor delivers on the order of **12 N·m**
-at ~45 rpm, is self-locking through its worm drive, and costs $10–15 second-hand
+at ~45 rpm, is self-locking through its worm drive, and costs $10-15 second-hand
 in Ulaanbaatar. That is the specified part.
 
 ### On τ_shear = 15 kPa

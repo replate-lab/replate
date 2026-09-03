@@ -10,7 +10,7 @@
 | File | Purpose |
 |---|---|
 | `v2-assembly.f3d` | Full assembly, Fusion 360 native |
-| `v2-assembly.step` | Neutral format — openable without Fusion, and still readable in ten years |
+| `v2-assembly.step` | Neutral format, openable without Fusion, and still readable in ten years |
 | `v2-exploded.png` | Exploded view render |
 | `v2-section.png` | Section through the vessel showing blade clearance and the shaft seal |
 | `drawings/blade.pdf` | Dimensioned manufacturing drawing |
@@ -26,7 +26,7 @@ with Fusion and the right version; STEP is readable by everything.
 The blade. It is the only part being sent out for manufacture, so it is the
 only part where a drawing is the deliverable rather than a description.
 
-A single properly executed drawing is worth more than a dozen casual ones. It
+It is better to do one drawing properly than ten of them casually. It
 should carry:
 
 - Overall dimensions with tolerances
@@ -38,7 +38,7 @@ should carry:
 
 This is also the drawing that goes in the portfolio. Readers who know
 mechanical engineering will look at exactly this and judge whether the
-dimensioning scheme makes sense — whether datums are sensible, whether
+dimensioning scheme makes sense, whether datums are sensible, whether
 tolerances are specified where function requires them rather than everywhere.
 
 Send the DXF to the shop; keep the PDF here as the record of what was
@@ -55,9 +55,9 @@ recorded:
 inclusion; too loose and material packs against the wall unmixed. Section view
 makes this a decision instead of an accident.
 
-**Shaft penetration and seal.** Predicted to be the first mechanical failure —
-Prediction 5 in the main README. It has to survive heat, moisture and abrasive
-solids simultaneously. Model it properly.
+**Shaft penetration and seal.** We think this is the first thing that will break,
+which is Prediction 5 in the main README. It has to survive heat, moisture and
+abrasive solids all at once. Model it properly.
 
 **Airflow path.** Inlet, headspace, exhaust. The mass-transfer argument in
 `/calcs` assumes air actually sweeps the surface rather than short-circuiting
@@ -71,6 +71,6 @@ v1 was built without CAD, which is a normal way to start and not worth
 apologising for. Its as-built dimensions are recorded in
 [`../docs/v1/specs.md`](../docs/v1/specs.md) instead.
 
-Modelling v1 retrospectively from those measurements would be genuinely useful
-— it gives a like-for-like geometric comparison against v2, and it is good
-practice on a machine that already exists.
+Going back and modelling v1 from those measurements would be worth doing. It
+would give us a direct geometric comparison against v2, and it is good practice
+on a machine that already exists.

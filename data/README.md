@@ -5,10 +5,10 @@ Raw logs from every run, including failed ones.
 **Lead:** Zuliinbaysgalan Enebish
 **Status:** Machine runs not started. Two strands of work feed this directory.
 
-1. **Composting programme** — the manual process that preceded the machine, and
+1. **Composting programme**, the manual process that preceded the machine, and
    the logging standard for batches going forward:
    [`composting-2026-06/`](./composting-2026-06)
-2. **Germination trial** — the liquid fertiliser tested on flowers and
+2. **Germination trial**, the liquid fertiliser tested on flowers and
    vegetables. Protocol, control design, and the Zucconi maturity index:
    [`../docs/germination-trial.md`](../docs/germination-trial.md)
 
@@ -16,7 +16,7 @@ Raw logs from every run, including failed ones.
 the field stays empty. An empty cell can be filled later; an invented number
 that gets quoted downstream cannot be pulled back.
 
-**Prototype v1 produces no data at all** — it carries no sensors. Instrumenting
+**Prototype v1 produces no data at all**, it carries no sensors. Instrumenting
 it for a baseline is Phase 1, before any mechanical change to v2.
 
 ---
@@ -43,7 +43,7 @@ sec,state,t_core,t_exh,rh,mass_g,heater,mixing
 | Column | Unit | Meaning |
 |---|---|---|
 | `sec` | s | Seconds since cycle start |
-| `state` | — | PREHEAT / DRY / MILL / COOL / DONE / FAULT |
+| `state` |  | PREHEAT / DRY / MILL / COOL / DONE / FAULT |
 | `t_core` | °C | Core temperature (DS18B20) |
 | `t_exh` | °C | Exhaust temperature (DS18B20) |
 | `rh` | % | Exhaust relative humidity (DHT22) |
@@ -83,7 +83,7 @@ supports it.
 ## Measurement discipline
 
 - Minimum **n = 3** per condition before any conclusion is drawn
-- Ambient temperature and humidity recorded for every run — they affect inlet ω
+- Ambient temperature and humidity recorded for every run, they affect inlet ω
 - Batch composition recorded; a run on citrus peel is not comparable to one on
   mixed vegetable waste
 - Uncertainty stated on every reported figure

@@ -1,5 +1,5 @@
 /* ==============================================================
-   re:plate v1.0 — food waste dryer controller
+   re:plate v1.0, food waste dryer controller
    Board: ESP32 DevKit v1 (Arduino-ESP32 core 3.x)
 
    Libraries: OneWire, DallasTemperature, HX711 (bogde),
@@ -19,10 +19,10 @@
 
 /* ---------- PIN MAP ---------- */
 const int PIN_TEMP    = 4;    // DS18B20 bus (4.7k pull-up required)
-const int PIN_SSR     = 5;    // Solid-state relay — heater
+const int PIN_SSR     = 5;    // Solid-state relay, heater
 const int PIN_HX_DT   = 16;   // HX711 data
 const int PIN_HX_SCK  = 17;   // HX711 clock
-const int PIN_DHT     = 18;   // DHT22 — exhaust
+const int PIN_DHT     = 18;   // DHT22, exhaust
 const int PIN_M_RPWM  = 25;   // BTS7960 forward
 const int PIN_M_LPWM  = 26;   // BTS7960 reverse (jam clearing)
 const int PIN_M_EN    = 27;   // BTS7960 enable
@@ -33,7 +33,7 @@ const int PIN_BTN     = 34;   // Start button (input only pin)
 
 /* ---------- SETPOINTS ---------- */
 const float T_TARGET      = 65.0;   // Target core temperature, °C
-const float T_HYST        =  3.0;   // Hysteresis band — limits SSR cycling
+const float T_HYST        =  3.0;   // Hysteresis band, limits SSR cycling
 const float T_ABORT       = 95.0;   // Hard abort threshold
 const float T_COOL_END    = 40.0;   // Cool-down complete
 const float MASS_END_FRAC = 0.35;   // Stop at 35% of initial mass
@@ -43,7 +43,7 @@ const unsigned long MIX_OFF   = 480000UL;   // Rest 8 min
 const unsigned long LOG_EVERY = 5000UL;     // Log every 5 s
 const unsigned long RUN_MAX   = 28800000UL; // 8 h ceiling
 
-const int FAN_DRY   = 180;   // 0–255. THIS IS THE PHASE 2 VARIABLE.
+const int FAN_DRY   = 180;   // 0-255. THIS IS THE PHASE 2 VARIABLE.
 const int FAN_COOL  = 255;
 const int MOTOR_PWM = 200;
 
@@ -77,7 +77,7 @@ void fault(String msg) {
 
 void setHeater(bool on) {
   // Refuse to energise on an implausible or dangerous reading.
-  // This is a second layer only — the thermal fuse is the safety system.
+  // This is a second layer only, the thermal fuse is the safety system.
   if (tCore < -50 || tCore > T_ABORT) on = false;
   heaterOn = on;
   digitalWrite(PIN_SSR, on ? HIGH : LOW);
@@ -139,11 +139,11 @@ void setup() {
   tempSensors.begin();
   dht.begin();
   scale.begin(PIN_HX_DT, PIN_HX_SCK);
-  scale.set_scale(420.0);   // CALIBRATE THIS — see firmware/README.md
+  scale.set_scale(420.0);   // CALIBRATE THIS, see firmware/README.md
   scale.tare();
 
   if (!SD.begin(PIN_SD_CS)) {
-    Serial.println("Warning: SD card not found — logging disabled");
+    Serial.println("Warning: SD card not found, logging disabled");
   } else {
     logFile = SD.open("/replate.csv", FILE_APPEND);
     if (logFile) {
@@ -181,7 +181,7 @@ void loop() {
 
     case PREHEAT:
       setHeater(tCore < T_TARGET);
-      analogWrite(PIN_FAN, 60);        // low flow — conserve heat
+      analogWrite(PIN_FAN, 60);        // low flow, conserve heat
       handleMixing();
       if (tCore >= T_TARGET - T_HYST) state = DRY;
       break;

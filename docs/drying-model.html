@@ -215,19 +215,19 @@
   <main class="main">
 
     <div class="tiles">
-      <div class="tile hero"><div class="k">Specific energy</div><div class="v" id="tSE">—</div><div class="u">kWh / kg water</div></div>
-      <div class="tile"><div class="k">Cycle time</div><div class="v" id="tCT">—</div><div class="u">hours</div></div>
-      <div class="tile"><div class="k">Energy</div><div class="v" id="tEN">—</div><div class="u">kWh / batch</div></div>
-      <div class="tile"><div class="k">Water removed</div><div class="v" id="tWR">—</div><div class="u">kg</div></div>
-      <div class="tile"><div class="k">Mass reduction</div><div class="v" id="tMR">—</div><div class="u">%</div></div>
-      <div class="tile"><div class="k">Limited by</div><div class="v" id="tRG" style="font-size:15px;padding-top:5px">—</div><div class="u" id="tRGu">&nbsp;</div></div>
+      <div class="tile hero"><div class="k">Specific energy</div><div class="v" id="tSE">-</div><div class="u">kWh / kg water</div></div>
+      <div class="tile"><div class="k">Cycle time</div><div class="v" id="tCT">-</div><div class="u">hours</div></div>
+      <div class="tile"><div class="k">Energy</div><div class="v" id="tEN">-</div><div class="u">kWh / batch</div></div>
+      <div class="tile"><div class="k">Water removed</div><div class="v" id="tWR">-</div><div class="u">kg</div></div>
+      <div class="tile"><div class="k">Mass reduction</div><div class="v" id="tMR">-</div><div class="u">%</div></div>
+      <div class="tile"><div class="k">Limited by</div><div class="v" id="tRG" style="font-size:15px;padding-top:5px">-</div><div class="u" id="tRGu">&nbsp;</div></div>
     </div>
 
     <div class="chart">
       <div class="chead">
         <div>
           <h3>Specific energy against airflow</h3>
-          <div class="sub">model sweep &middot; 10–400 L/min at current settings</div>
+          <div class="sub">model sweep &middot; 10-400 L/min at current settings</div>
         </div>
         <div class="legend">
           <span class="lg"><span class="d" style="background:var(--air)"></span>Energy per kg water</span>
@@ -263,7 +263,7 @@
 
     <div class="note">
       <h4>What the sweep is telling you</h4>
-      <p id="verdict">—</p>
+      <p id="verdict">-</p>
     </div>
 
     <div class="note warn">
@@ -272,8 +272,7 @@
       balance and one mass-transfer relation, integrated forward in time. This is
       the standard tool for sizing a dryer and for finding where an operating
       optimum sits.</p>
-      <p><b>It is not</b> CFD and it is not FEA. There is no spatial resolution —
-      the load is treated as one well-mixed lump at a single temperature. It cannot
+      <p><b>It is not</b> CFD and it is not FEA. There is no spatial resolution, the load is treated as one well-mixed lump at a single temperature. It cannot
       tell you about dead zones, channelling, or hot spots on the vessel wall.</p>
       <p>Every number it produces is a <b>prediction to be tested</b>, not a
       result. The point of building the machine is to find out where this model is
@@ -283,10 +282,10 @@
     <div class="note">
       <h4>Assumptions</h4>
       <ul class="as">
-        <li><b>Well-mixed load</b> at uniform temperature — reasonable with an agitator running, less so between mixing intervals.</li>
+        <li><b>Well-mixed load</b> at uniform temperature, reasonable with an agitator running, less so between mixing intervals.</li>
         <li><b>Exhaust approaches saturation</b> to a factor φ = 0.60, falling linearly once moisture content drops below X<sub>c</sub> = 0.6 kg/kg dry. This is what produces the falling-rate period.</li>
         <li><b>Wall loss</b> from conduction through insulation plus 10 W/m²K outside convection, multiplied by 2.5 for thermal bridging through the lid, shaft and supports. That factor is an estimate and Phase 2 measures it.</li>
-        <li><b>Constant properties</b> — c<sub>p</sub> of solids 1.8 kJ/kg·K, water 4.18. Latent heat varies with temperature as h<sub>fg</sub> = 2501 − 2.36·T kJ/kg.</li>
+        <li><b>Constant properties</b>, c<sub>p</sub> of solids 1.8 kJ/kg·K, water 4.18. Latent heat varies with temperature as h<sub>fg</sub> = 2501 − 2.36·T kJ/kg.</li>
         <li><b>Altitude matters.</b> At 1300 m the ambient pressure is about 87 kPa, which raises saturation humidity and helps drying. Sea-level figures understate it.</li>
         <li><b>Parasitic loads</b> included: blower scaled with airflow, agitator at its 20 s / 8 min duty.</li>
       </ul>
@@ -496,13 +495,13 @@
         msg += 'You are sitting on it.';
       } else if (S.air > best.f) {
         msg += 'The current ' + S.air + ' L/min is <b>above</b> that, costing about ' +
-          d.toFixed(0) + '% more energy per kg — the extra air is carrying heat out faster than it carries water out.';
+          d.toFixed(0) + '% more energy per kg, the extra air is carrying heat out faster than it carries water out.';
       } else {
         msg += 'The current ' + S.air + ' L/min is <b>below</b> it, costing about ' +
-          d.toFixed(0) + '% more per kg and a longer cycle — there is not enough air to remove the vapour the heater is producing.';
+          d.toFixed(0) + '% more per kg and a longer cycle, there is not enough air to remove the vapour the heater is producing.';
       }
       if (best.f < 80) {
-        msg += ' Note this sits <b>under the 80–150 L/min range recorded in Prediction 2</b>. If the model is right, that prediction is wrong, and the blower specification should come down.';
+        msg += ' Note this sits <b>under the 80-150 L/min range recorded in Prediction 2</b>. If the model is right, that prediction is wrong, and the blower specification should come down.';
       }
     }
     el('verdict').innerHTML = msg;
@@ -565,9 +564,9 @@
   /* ================= tiles ================= */
   function tiles() {
     var r = simulate(S);
-    el('tSE').textContent = r.complete ? r.specific.toFixed(2) : '—';
+    el('tSE').textContent = r.complete ? r.specific.toFixed(2) : '-';
     el('tCT').textContent = r.complete ? r.hours.toFixed(1) : '>14';
-    el('tEN').textContent = r.complete ? r.energy.toFixed(2) : '—';
+    el('tEN').textContent = r.complete ? r.energy.toFixed(2) : '-';
     el('tWR').textContent = r.removed.toFixed(3);
     el('tMR').textContent = r.reduction.toFixed(0);
     var rg = el('tRG'), ru = el('tRGu');

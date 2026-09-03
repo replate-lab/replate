@@ -35,7 +35,7 @@ mains heating element by hand. We do not do it.
 
 A used rice cooker is purchased whole and switched on its mains cord by a
 solid-state relay. This preserves the appliance's factory thermal cut-out,
-insulation, and earthing — protection engineered and type-tested by a
+insulation, and earthing, protection engineered and type-tested by a
 manufacturer, which we cannot reproduce.
 
 The SSR switches the appliance. It does not replace anything inside it.
@@ -65,7 +65,7 @@ The SSR switches the appliance. It does not replace anything inside it.
 ## Operating rules
 
 - **Never run unattended** until twenty logged, uneventful cycles are recorded
-  in the build log. Not "it seems fine" — twenty logged cycles.
+  in the build log. Not "it seems fine", twenty logged cycles.
 - **Never open the lid above 60 °C** core temperature. Steam.
 - **Never bypass the interlock** to observe the blade running. There is no
   observation worth a hand.

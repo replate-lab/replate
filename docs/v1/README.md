@@ -1,4 +1,4 @@
-# Prototype v1 — documentation
+# Prototype v1, documentation
 
 v1 exists and runs. This directory is where the evidence for that lives:
 photographs, dimensions, and the wiring as actually built.
@@ -9,8 +9,8 @@ photographs, dimensions, and the wiring as actually built.
 
 ## Why this matters more than it sounds
 
-Every analytical claim in this repository — the energy balance, the three
-faults, the case for a smaller vessel — refers to a machine a reader cannot
+Every analytical claim in this repository, the energy balance, the three
+faults, the case for a smaller vessel, refers to a machine a reader cannot
 see. Analysis without an object attached to it reads as speculation, however
 carefully it is argued.
 
@@ -21,8 +21,7 @@ a proposal into a record of something real.
 
 ## Shot list
 
-Phone camera is fine. Daylight near a window, no flash. Wipe the lens first —
-it makes more difference than anything else.
+Phone camera is fine. Daylight near a window, no flash. Wipe the lens first, it makes more difference than anything else.
 
 ### The machine
 
@@ -43,7 +42,7 @@ it makes more difference than anything else.
 | # | Shot | Why |
 |---|---|---|
 | 10 | Machine running, lid closed | Proof of operation |
-| 11 | Load going in — weigh it first and note the mass | Input condition |
+| 11 | Load going in, weigh it first and note the mass | Input condition |
 | 12 | Output at end of cycle, same framing | The result |
 | 13 | Input and output side by side, same scale, ruler in frame | **The single most persuasive image in the project** |
 
@@ -53,7 +52,7 @@ it makes more difference than anything else.
 |---|---|---|
 | 14 | Scorching, wear, deformation, anything that broke | Fault evidence. Do not tidy up before photographing. |
 
-Shot 14 is worth more than shots 1–13 combined to a reader who knows hardware.
+Shot 14 is worth more than shots 1-13 combined to a reader who knows hardware.
 Everyone photographs the clean version. Almost nobody photographs the burnt bit.
 
 ---
@@ -67,7 +66,7 @@ v1_13_input-output.jpg
 v1_14_scorching-heater.jpg
 ```
 
-Keep them under about 1 MB each — resize to roughly 1600 px on the long edge.
+Keep them under about 1 MB each, resize to roughly 1600 px on the long edge.
 Git handles text well and binaries poorly.
 
 ---
@@ -94,6 +93,6 @@ later is not the same thing.
 A hand-drawn diagram, photographed, is entirely acceptable. What matters is
 that it reflects what is actually wired, including anything provisional.
 
-This also feeds [`../safety.md`](../safety.md) — the hazard register describes
+This also feeds [`../safety.md`](../safety.md), the hazard register describes
 v2's intended protections, and v1's real state should be recorded honestly
 against it.

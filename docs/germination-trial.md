@@ -1,10 +1,10 @@
 # Germination trial protocol
 
-The liquid fertiliser produced during the June–August composting work is
+The liquid fertiliser produced during the June-August composting work is
 currently being tested on flowers and vegetables. This document specifies how
 that test should be run so the result means something.
 
-**Status:** protocol written 2026-09-01. Trial in progress — if it is already
+**Status:** protocol written 2026-09-01. Trial in progress, if it is already
 running without a control, start a parallel run using this design.
 
 ---
@@ -35,8 +35,8 @@ Minimum four, run simultaneously:
 
 | Group | Treatment | Purpose |
 |---|---|---|
-| **C** | Distilled water | Negative control — the baseline everything is scored against |
-| **T10** | Fertiliser diluted 1:10 | Strong dose — most likely to show phytotoxicity |
+| **C** | Distilled water | Negative control, the baseline everything is scored against |
+| **T10** | Fertiliser diluted 1:10 | Strong dose, most likely to show phytotoxicity |
 | **T20** | Fertiliser diluted 1:20 | Moderate dose |
 | **T50** | Fertiliser diluted 1:50 | Weak dose |
 
@@ -69,14 +69,14 @@ Everything except the treatment must be identical:
 This is the accepted standard for compost maturity, which makes the result
 comparable to published work rather than only to itself.
 
-Run on filter paper in petri dishes — faster and cleaner than pots, and it is
+Run on filter paper in petri dishes, faster and cleaner than pots, and it is
 what the index is defined for.
 
 **Procedure**
 
 1. Filter paper in each dish, 20 seeds evenly spaced
 2. Add a measured volume of treatment solution (same volume in every dish)
-3. Dark, 25 °C, 48–72 hours
+3. Dark, 25 °C, 48-72 hours
 4. Count germinated seeds
 5. Measure root length of every germinated seed, in mm
 
@@ -93,12 +93,12 @@ GI = ( G_treatment / G_control ) × ( L_treatment / L_control ) × 100
 
 | GI | Meaning |
 |---|---|
-| < 50% | Strongly phytotoxic — not usable |
-| 50–80% | Immature — needs further curing |
+| < 50% | Strongly phytotoxic, not usable |
+| 50-80% | Immature, needs further curing |
 | **> 80%** | **Mature, non-phytotoxic** |
 | > 100% | Growth stimulation beyond the control |
 
-Cress, radish, or Chinese cabbage are the conventional test species — fast,
+Cress, radish, or Chinese cabbage are the conventional test species, fast,
 sensitive, and comparable to the literature. Use one of those for the index,
 and run the flowers and vegetables separately as a practical demonstration.
 
@@ -110,18 +110,18 @@ Run alongside the assay for photographs and growth data.
 
 **Measure**
 - Germination count at days 7, 10, 14
-- Seedling height at days 14, 21 — mm, with a ruler in the photograph
+- Seedling height at days 14, 21, mm, with a ruler in the photograph
 - Leaf count at day 21
 - Dry biomass at the end: harvest, dry at 70 °C to constant mass, weigh
 
-Dry biomass is the most honest single number. Height can mislead — etiolated
+Dry biomass is the most honest single number. Height can mislead, etiolated
 seedlings stretch when stressed.
 
 **Photograph daily**
 - Same distance, same lighting, same angle
 - Ruler in frame
 - Written label visible: group, date
-- One photo of all groups together each day — that is the comparison shot
+- One photo of all groups together each day, that is the comparison shot
 
 ---
 
@@ -142,7 +142,7 @@ Scored by:
 ```
 
 Anything not recorded here cannot be reconstructed later. The fertiliser batch
-matters most — a result is meaningless if we cannot say which compost run
+matters most, a result is meaningless if we cannot say which compost run
 produced the material.
 
 ---
@@ -150,7 +150,7 @@ produced the material.
 ## Reporting
 
 Report the GI with its spread across replicates, not a bare number. State
-sample size. If a group failed or was contaminated, report that too — a trial
+sample size. If a group failed or was contaminated, report that too, a trial
 with one bad dish and an honest note is worth more than a clean number with an
 unexplained gap.
 

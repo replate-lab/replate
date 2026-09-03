@@ -3,267 +3,276 @@
 An open-source benchtop machine that dries and grinds household food waste into
 a stable, storable soil amendment feedstock in under five hours.
 
-**The claim this project tests:** converting food waste into fertiliser feedstock
-is a mass-transfer problem, not a biological one. The machine that does it is
-limited by how fast water vapour can leave the vessel — not by how much heat
-goes into it. Every design decision here follows from that.
+**What we think is true:** turning food waste into fertiliser feedstock is a
+mass-transfer problem, not a biological one. The machine is limited by how fast
+water vapour can leave the vessel, not by how much heat goes into it. The design
+follows from that.
 
-**Status:** Prototype **v1 is built and running** since July 2026 — blade
-agitator, resistive heater, extraction fan. It works. It also overheats, shows
-anomalies under load that we cannot yet diagnose, and is oversized badly enough
-to be inefficient. **v2 is being designed to fix those three faults**, and this
-repository documents that work as it happens.
+**Status:** Prototype v1 is built and running since July 2026, with a blade
+agitator, a resistive heater and an extraction fan. It works. It also overheats,
+does things under load that we cannot explain, and is too big for the batch it
+handles, which makes it inefficient. We are designing v2 to fix those three
+problems, and this repository is where that work goes.
 
-> **On this repository's history.** Work began in June 2026; the repository was
-> opened on 28 August 2026, roughly two and a half months in. Entries dated
-> before then are recorded retrospectively and are marked as such in the build
-> log. Everything from 28 August onward is contemporaneous and timestamped in
-> the commit history. We started documenting later than we should have, which
-> is its own lesson and is why the logging standards in `/data` now exist.
+> **About the dates.** We started in June 2026 but only opened this repository on
+> 28 August, about two and a half months in. Entries before that date were
+> written from memory and are marked in the build log. Everything from 28 August
+> is timestamped in the commit history. We should have started logging earlier.
+> That is why the logging rules in `/data` exist now.
 
 ---
 
 ## Team
 
-Four co-founders. Ulaanbaatar, Mongolia.
+Four co-founders, Ulaanbaatar, Mongolia.
 
 | | Responsibility |
 |---|---|
-| **Chinbuyan Tuvshintur** | Thermal design and energy modelling — energy balance, insulation, drying analysis |
-| **Ariunsaikhan Batsaikhan** | Instrumentation and control — ESP32 firmware, sensor integration, data logging |
-| **Tsenguun Battulga** | Mechanical design and fabrication — vessel, agitator, shaft assembly, CAD |
-| **Zuliinbaysgalan Enebish** | Experimental design and analysis — test matrix, uncertainty, results |
+| **Chinbuyan Tuvshintur** | Thermal design and energy modelling: energy balance, insulation, drying analysis |
+| **Ariunsaikhan Batsaikhan** | Instrumentation and control: ESP32 firmware, sensors, data logging |
+| **Tsenguun Battulga** | Mechanical design and fabrication: vessel, agitator, shaft assembly, CAD |
+| **Zuliinbaysgalan Enebish** | Experimental design and analysis: test matrix, uncertainty, results |
 
-Responsibilities are stated because a project of this size cannot be honestly
-credited to any one of us. The commit history records who did what, and it is
-open to inspection.
+We list responsibilities because none of us did this alone and it would be wrong
+to imply otherwise. The commit history shows who did what.
 
 ## Where this came from
 
-The project began on **12 June 2026** as a composting effort. We collected food
-waste from a restaurant and produced liquid fertiliser in batches running
-1–2.5 months, tracking temperature and yield, and working particularly on odour
-— which we reduced substantially. That work is still running: the resulting
-fertiliser is currently being tested on flowers and vegetables.
+We started on **12 June 2026** by composting. We collected food waste from a
+restaurant and made liquid fertiliser from it, in batches that ran 1 to 2.5
+months. We tracked temperature and yield, and we spent a lot of time on the
+smell, which we did manage to reduce. That work is still going. The fertiliser
+is being tested on flowers and vegetables now.
 
-**The composting worked.** That is not why we stopped relying on it.
+The composting worked. We stopped relying on it for a different reason.
 
-It took months of attention to produce a small amount of output. The process
-was slow, effortful, and inconvenient enough that nobody would sustain it in an
-apartment. By mid-July the bottleneck was clearly not biology — it was the
-absence of a machine to do the tedious part quickly and without supervision.
+It took months of attention to make a small amount of fertiliser. It was slow,
+it needed constant checking, and it was inconvenient enough that no ordinary
+household would keep doing it. By the middle of July we could see the problem
+was not the biology. The decomposition was fine. The problem was that all the
+tedious mechanical work, breaking material down, keeping it warm, moving air
+through it, was being done by hand.
 
-We started building one on **15 July 2026**.
+We started building a machine on **15 July 2026**.
 
 ## Prototype v1
 
 Blade agitator, resistive heater, extraction fan. It dries and it grinds.
 
-Three faults, in the order they matter:
+Three problems, worst first:
 
-| Fault | What we observe | Suspected cause |
+| Problem | What we see | What we think is causing it |
 |---|---|---|
-| **Overheating** | Core temperature runs above target with no stable setpoint | No closed-loop control. The heater is not duty-cycled against a measured temperature. |
-| **Anomalies under load** | Inconsistent behaviour mid-cycle, not yet characterised | Unknown — and undiagnosable, because v1 carries no instrumentation and logs nothing. |
-| **Poor efficiency** | Vessel is oversized for the batch it processes | Thermal mass and heat-loss area both scale badly against a small load. See the energy balance in [`/calcs`](./calcs). |
+| **Overheating** | Temperature climbs past the target and never settles | There is no closed loop. The heater is not switched against a measured temperature. |
+| **Odd behaviour under load** | The machine behaves differently mid-cycle and we cannot say why | We do not know. v1 has no sensors and records nothing, so we can only describe the symptom. |
+| **Too big, so inefficient** | The vessel is much larger than the batch it processes | Too much thermal mass and too much surface area losing heat. See the energy balance in [`/calcs`](./calcs). |
 
-The third fault is what the calculations in this repository were done to answer.
-They point at a **smaller vessel**, not a bigger heater — which is the opposite
-of the intuitive fix.
+The third problem is what the calculations in this repository were for. They
+point at a smaller vessel rather than a bigger heater, which is the opposite of
+what we expected.
 
-**v1 has no sensors and produces no data.** It cannot tell us why it misbehaves,
-and it cannot give us a baseline to prove v2 is any better. Instrumenting it is
-the first thing we do, before changing anything mechanical.
-
-As-built photographs and dimensions: [`/docs/v1`](./docs/v1).
+v1 has no sensors, so it cannot tell us why it misbehaves and cannot give us a
+baseline to compare v2 against. Adding instrumentation is the first thing we do,
+before changing anything mechanical.
 
 ## Why this repository exists
 
-Commercial food recyclers — Lomi, Vitamix FoodCycler, Reencle — cost $400–600
-and ship as sealed boxes. Their thermal design, airflow rates, and measured
-efficiency are not published.
+Commercial food recyclers like Lomi, Vitamix FoodCycler and Reencle cost $400 to
+$600 and come as sealed boxes. They do not publish their thermal design, their
+airflow rates, or their measured efficiency.
 
-The open-source landscape has adjacent work: Arduino compost *monitors*, several
-capable precision dehydrator controllers, and a body of academic literature on
-food waste drying kinetics. We could not find a project connecting them — one
-documenting a complete machine together with the sizing calculations that
-produced it and the performance data that tests them.
+There is related open-source work. Arduino compost monitors, several good
+dehydrator controllers, and academic papers on food waste drying. We could not
+find a project that puts them together, one that documents a complete machine
+along with the calculations that produced it and the data that tests them.
 
-This is an attempt at that, built to a $225 budget against a commercial
-equivalent costing $400–600. The constraint is documented as a design parameter,
-not an apology.
+This is our attempt at that. We are building to a $225 budget against commercial
+machines that cost $400 to $600, and we treat that limit as a design parameter
+rather than an excuse.
 
-## Scope, stated precisely
+## What this machine does and does not do
 
-This machine does **not** produce finished compost, and any five-hour machine
-claiming otherwise is overstating it. The output is dried, ground, odourless,
-volume-reduced organic material, stable enough to store for months. It becomes
-compost after 2–4 weeks of curing — the biological process we spent our first
+It does **not** make finished compost. Any machine that claims to do that in five
+hours is overstating it.
+
+What comes out is dried, ground, odourless organic material with most of the
+water removed. It is stable enough to store for months. It becomes compost after
+two to four weeks of curing, which is the biological process we spent our first
 two months doing by hand.
 
 ```
 food waste
-  → [ re:plate — 5 hours ]   → dried feedstock
-  → [ cure bin — 3 weeks ]   → compost
+  -> [ re:plate, 5 hours ]   -> dried feedstock
+  -> [ cure bin, 3 weeks ]   -> compost
 ```
 
-Our engineering claim is thermal and mechanical. We know what the biological
-stage costs in time and effort, because we did it.
+Our claim is thermal and mechanical. We know what the biological stage costs in
+time and effort because we did it ourselves.
 
 ## The thermal argument
 
-About 75% of food waste by mass is water. Removing it dominates the energy
-budget so completely that every other decision — heater rating, insulation
-thickness, vessel geometry, control strategy — is downstream of it.
+About 75% of food waste by mass is water. Removing it takes so much of the energy
+budget that every other decision, heater rating, insulation thickness, vessel
+size, control strategy, follows from it.
 
-The non-obvious part is the coupling. Airflow physically carries water vapour
-out of the vessel, so drying rate scales with it. But the same airflow carries
-sensible heat out, so energy consumed per kilogram of water removed *also*
-scales with it. Fast drying and efficient drying pull in opposite directions.
+The part that surprised us is the coupling. Airflow is what physically carries
+water vapour out of the vessel, so more air dries faster. But the same air also
+carries heat out, so more air costs more energy per kilogram of water removed.
+Drying quickly and drying efficiently work against each other.
 
-There is a real optimum. It depends on the machine's specific geometry and
-thermal mass, it cannot be derived from first principles, and it can only be
-found by measurement. Locating it is the central experiment of this project.
+There is an optimum somewhere. It depends on the machine's own geometry and
+thermal mass, we cannot derive it on paper, and the only way to find it is to
+measure. That is the main experiment in this project.
 
 ## v2 design targets
 
-| Parameter | Target | Basis |
+| Parameter | Target | Where it comes from |
 |---|---|---|
-| Batch capacity | 1.0 kg wet waste | Reduced from v1 — see efficiency fault above |
-| Cycle time | 4–5 hours | Energy balance |
-| Energy per cycle | 0.82 kWh | Q = 2 963 kJ at η ≈ 0.60 |
-| **Specific energy** | **1.21 kWh / kg water** | Primary optimisation metric |
-| Mass reduction | ~65% | 90% water removal |
-| Heater | 400 W, duty-cycled | 206 W mean over 4 h |
-| Airflow | 150 L/min, PWM-adjustable | 32 L/min theoretical minimum |
-| Mixing torque | 2.7 N·m design | τ_shear ≈ 15 kPa, r_eff = 50 mm |
-| Motor | ≥12 N·m | Sized for stall, not running load |
+| Batch capacity | 1.0 kg wet waste | Reduced from v1, see the efficiency problem above |
+| Cycle time | 4 to 5 hours | Energy balance |
+| Energy per cycle | 0.82 kWh | Q = 2 963 kJ at n = 0.60 |
+| **Specific energy** | **1.21 kWh / kg water** | The number we are trying to reduce |
+| Mass reduction | about 65% | 90% of water removed |
+| Heater | 400 W, switched on and off | 206 W average over 4 hours |
+| Airflow | 150 L/min, adjustable | 32 L/min is the theoretical minimum |
+| Mixing torque | 2.7 N.m design load | shear stress about 15 kPa at 50 mm |
+| Motor | at least 12 N.m | Sized for stalling, not for running |
 
-Reference points for specific energy: the theoretical floor set by the latent
-heat of vaporisation is 0.67 kWh/kg. Industrial indirect dryers achieve
-0.80–0.96. This design targets 1.21, and the work is to drive it down.
+For comparison, the theoretical floor from the latent heat of vaporisation is
+0.67 kWh/kg, and industrial dryers manage 0.80 to 0.96. We are starting at a
+predicted 1.21 and trying to bring it down.
 
-**We do not know v1's specific energy.** That is the measurement gap Phase 1
-closes, and until it is closed we cannot state an improvement figure.
+We do not know v1's specific energy. That is the gap Phase 1 closes, and until
+then we cannot honestly claim v2 is an improvement.
 
-Full derivations with stated assumptions are in [`/calcs`](./calcs).
+Full working is in [`/calcs`](./calcs).
 
-## Predictions, recorded before v2 is built
+## Predictions, written down before v2 is built
 
-Committed now so that they can be shown wrong later. Each will be marked
-confirmed or refuted against measured data, with the discrepancy explained
-rather than quietly dropped.
+We are writing these now so they can be shown wrong later. Each one gets marked
+confirmed or refuted against real data, and where we were wrong we explain the
+difference rather than quietly dropping it.
 
 | # | Prediction | Confidence | Result |
 |---|---|---|---|
-| 1 | v2 specific energy lands between 1.10 and 1.40 kWh/kg water | Moderate | — |
-| 2 | An airflow optimum exists, between 80 and 150 L/min | High | — |
-| 3 | Mixing torque peaks mid-cycle, exceeding both the wet and dry extremes | Moderate | — |
-| 4 | Drying is predominantly falling-rate; any constant-rate period is short or absent | High | — |
-| 5 | The rotating shaft seal is the first mechanical component to fail | Moderate | — |
-| 6 | v1's overheating is a control problem, not a heater-rating problem — closed-loop duty cycling fixes it without changing the element | High | — |
-| 7 | Reducing batch size to 1.0 kg improves specific energy by more than 15% against v1 | Moderate | — |
+| 1 | Specific energy lands between 1.10 and 1.40 kWh/kg water | Moderate | |
+| 2 | An airflow optimum exists, between 80 and 150 L/min | High | |
+| 3 | Mixing torque peaks in the middle of the cycle, higher than at either the wet or the dry end | Moderate | |
+| 4 | Drying is mostly falling-rate, with a short constant-rate period or none at all | High | |
+| 5 | The rotating shaft seal is the first mechanical part to fail | Moderate | |
+| 6 | v1's overheating is a control problem, not a heater problem. Closed-loop switching fixes it without changing the element | High | |
+| 7 | Dropping to a 1.0 kg batch improves specific energy by more than 15% against v1 | Moderate | |
 
-Prediction 3 is the one we are least confident in and most interested in. It
-follows from the material passing through a dough-like phase as moisture drops,
-but we have found no direct measurement of it for food waste.
+Prediction 3 is the one we are least sure about and most curious about. It
+follows from the material going through a sticky, dough-like stage as it dries,
+but we could not find anyone who has measured this for food waste.
 
-Predictions 6 and 7 come directly from v1's observed faults and are the two the
-next build is designed to settle.
+Predictions 6 and 7 come straight from v1's problems and are what the next build
+is meant to settle.
+
+**Prediction 2 is already in dispute.** Our own drying model, in
+[`docs/drying-model.html`](./docs/drying-model.html), puts the optimum below that
+range. We are leaving both numbers here rather than quietly correcting one. The
+measurement decides.
 
 ## Instrumentation
 
-v1 has none. v2 is built to produce data, not only output:
+v1 has none. v2 is built to produce data as well as output.
 
-- **Load cell beneath the vessel** — mass vs. time at 0.2 Hz, yielding the drying
-  curve directly. This is the primary dataset.
-- **Two thermocouples** (core, exhaust) — thermal behaviour and loss estimation.
-- **Inlet and exhaust humidity** — measured moisture pickup against the predicted
-  Δω = 0.084 kg/kg dry air.
-- **Motor current** — mixing torque as a function of moisture content.
+- **Load cell under the vessel**, mass against time at 0.2 Hz. This gives the
+  drying curve directly and is our main dataset.
+- **Two temperature sensors**, core and exhaust, for thermal behaviour and heat
+  loss.
+- **Inlet and exhaust humidity**, to check the moisture pickup against the
+  predicted 0.084 kg per kg of dry air.
+- **Motor current**, to get mixing torque against moisture content.
 
-Planned analysis: drying curves fitted against the Midilli model, the
-energy-vs-airflow optimisation surface, and the torque-vs-moisture relationship.
+We plan to fit the drying curves to the Midilli model, map specific energy
+against airflow, and plot torque against moisture.
 
-## The number that does not flatter this project
+## The number that does not look good for us
 
-At roughly 0.8 kWh per kilogram of waste processed, on a coal-dominated grid
-this machine emits on the order of 0.6 kg CO₂ per batch. Landfilling the same
-waste produces roughly 0.5–0.7 kg CO₂-equivalent through anaerobic methane.
+At roughly 0.8 kWh per kilogram of waste, on a coal-heavy grid this machine
+produces something like 0.6 kg of CO2 per batch. Sending the same waste to
+landfill produces roughly 0.5 to 0.7 kg CO2-equivalent as methane.
 
-Within the uncertainty of those figures, **it is approximately a wash.**
+Within the uncertainty of those figures, **it is about even.**
 
-This is the least comfortable result in the project. It will be published with
-the grid emission factors it depends on, not buried. Two things follow.
+This is the least comfortable result we have and we are publishing it with the
+emission factors it depends on rather than leaving it out. Two things follow.
 
-First, it constrains the honest use case. This machine is not for a household
-with room for a compost heap; there it is strictly worse. It is for apartment
-housing, where the realistic alternative is landfill rather than composting.
-That is a narrower claim than "sustainable technology," and it is the one our
-data can support.
+First, it limits what we can honestly claim. This machine is not for a household
+with room for a compost heap. There it is simply worse. It is for apartments,
+where the real alternative is landfill, not composting. That is a narrower claim
+than "sustainable technology" but it is the one our numbers support.
 
-Second, it gives the efficiency work real stakes. Moving specific energy below
-0.9 kWh/kg is the threshold at which the machine becomes defensible on its own
-terms rather than marginal. A counterflow exhaust heat exchanger is the planned
-route, evaluated as an A/B comparison on identical batches.
+Second, it makes the efficiency work matter. Getting specific energy below 0.9
+kWh/kg is the point where the machine stops being marginal. A counterflow heat
+exchanger on the exhaust is our plan for that, tested by running identical
+batches with and without it.
 
-## Method
+## How we are working
 
-Each phase ends at a measurable gate. The next does not begin until the gate
+Each phase ends at something measurable. We do not start the next one until it
 passes.
 
-The ordering is deliberate, and it is the correction v1 taught us: **measure
-before rebuilding.** v1 was built without instrumentation, so its faults can be
-described but not diagnosed. We are not repeating that.
+The order matters, and it is the thing v1 taught us. **Measure before rebuilding.**
+v1 was built with no instrumentation, so we can describe its problems but not
+diagnose them. We are not doing that again.
 
-| Phase | Work | Gate |
+| Phase | Work | What has to pass |
 |---|---|---|
-| 1 | Instrument v1 — sensors and logging, no mechanical change | A logged v1 baseline: drying curve and specific energy |
-| 2 | v2 thermal rig — reduced vessel, closed-loop control | ≥45% mass loss, core held at 65 ± 5 °C, no overheat |
-| 3 | Airflow and exhaust | Energy-vs-airflow curve with visible optimum |
-| 4 | Agitation | Unattended cycle without jamming; torque curve |
-| 5 | Integration | Three consecutive unattended cycles |
-| 6 | Characterisation | Test matrix, n ≥ 3 per condition, stated uncertainty |
-| 7 | Heat recovery | Measured Δ in specific energy, with and without |
+| 1 | Instrument v1, sensors and logging, no mechanical change | A logged v1 baseline: drying curve and specific energy |
+| 2 | v2 thermal rig, smaller vessel, closed-loop control | 45% mass loss or better, core held at 65 +/- 5 C, no overheating |
+| 3 | Airflow and exhaust | Energy against airflow, with a visible optimum |
+| 4 | Agitation | A full cycle unattended without jamming, plus a torque curve |
+| 5 | Integration | Three unattended cycles in a row |
+| 6 | Characterisation | Test matrix, at least 3 runs per condition, uncertainty stated |
+| 7 | Heat recovery | Measured change in specific energy, with and without |
 
-Dated session notes: [`/docs/build-log.md`](./docs/build-log.md).
+Session notes: [`/docs/build-log.md`](./docs/build-log.md).
 
 ## Repository structure
 
 ```
-/calcs                    sizing calculations, assumptions stated, units carried
-/cad                      Fusion 360 models, drawings, exports
-/firmware                 ESP32 controller
-/data                     raw logs from every run, including failed ones
-  composting-2026-06/     the manual process, and its logging standard
-/docs                     build log, bill of materials, safety
-  v1/                     as-built photographs and dimensions
-  germination-trial.md    fertiliser maturity protocol
-  prior-art.md            commercial, open-source and academic review
+/calcs      sizing calculations, assumptions stated, units carried
+/cad        Fusion 360 models, drawings, exports
+/firmware   ESP32 controller
+/data       raw logs from every run, including the failed ones
+/docs       build log, wiring, bill of materials, safety notes
 ```
+
+Two interactive pages, both openable in a browser:
+
+- [`docs/v2-model.html`](./docs/v2-model.html), a 3D model of the v2 design built
+  from the calculated dimensions
+- [`docs/drying-model.html`](./docs/drying-model.html), a lumped-parameter drying
+  model that sweeps airflow and locates the specific-energy optimum
+
+Neither is CFD or FEA. The second one is a real model, but it has no spatial
+resolution and every number it produces is a prediction we still have to test.
 
 ## Safety
 
-This machine combines mains voltage, sustained heat, steam, and a powered blade.
-v1 overheats, which is a fire risk and is being treated as one.
+This machine has mains voltage, sustained heat, steam and a powered blade in it.
+v1 overheats, which is a fire risk, and we treat it as one.
 
-In v2 the heating element is deliberately not hand-wired. It is a commercial
-appliance switched by a solid-state relay, so its factory thermal protection and
-insulation remain intact — a decision made specifically to remove the most
-hazardous fabrication step from a student build. Beyond that: an independent
-non-resettable thermal fuse in series with the heater, a residual-current device
-on the supply, and a hardware lid interlock on the motor that does not depend on
-firmware.
+In v2 we are not wiring a heating element by hand. We use a commercial appliance
+switched by a solid-state relay, so its factory thermal cut-out and insulation
+stay intact. We chose this specifically to remove the most dangerous step from
+the build. On top of that there is a separate thermal fuse in series with the
+heater, an RCD on the supply, and a lid interlock switch that cuts motor power in
+hardware rather than in software.
 
 Full notes in [`/docs/safety.md`](./docs/safety.md). Read them before building
-from this.
+anything from this.
 
 ## Prior work
 
-- Drying kinetics of household food waste — [PubMed 26507489](https://pubmed.ncbi.nlm.nih.gov/26507489/)
-- Energy consumption of agricultural dryers — [CIGR Journal](https://cigrjournal.org/index.php/Ejounral/article/download/3863/2494/0)
-- Precision dehydrator control — [truglodite/Dehydrator](https://github.com/truglodite/Dehydrator)
-- ESP32 rice dryer — [qppd/Rice-Dryer](https://github.com/qppd/Rice-Dryer)
+- Drying kinetics of household food waste, [PubMed 26507489](https://pubmed.ncbi.nlm.nih.gov/26507489/)
+- Energy consumption of agricultural dryers, [CIGR Journal](https://cigrjournal.org/index.php/Ejounral/article/download/3863/2494/0)
+- Precision dehydrator control, [truglodite/Dehydrator](https://github.com/truglodite/Dehydrator)
+- ESP32 rice dryer, [qppd/Rice-Dryer](https://github.com/qppd/Rice-Dryer)
 
 ## License
 
@@ -272,5 +281,5 @@ under CERN-OHL-S v2.
 
 ---
 
-*Ulaanbaatar, Mongolia. Started 12 June 2026. Where we are wrong, the correction
-will be recorded here alongside the original claim.*
+Ulaanbaatar, Mongolia. Started 12 June 2026. Where we get things wrong we will
+put the correction here next to the original claim.
