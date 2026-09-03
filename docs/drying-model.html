@@ -1,0 +1,625 @@
+<title>re:plate Drying Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+  :root {
+    --ground: #EDEFEC;
+    --surface: #FCFCFB;
+    --surface-2: #E4E7E3;
+    --ink: #14181A;
+    --ink-2: #4B5754;
+    --ink-3: #78847F;
+    --rule: #CBD1CB;
+    --rule-2: #DEE2DD;
+    --heat: #B4700C;
+    --air: #0A7EA4;
+    --heat-fill: rgba(180,112,12,.13);
+    --air-fill: rgba(10,126,164,.13);
+    --alert: #94271A;
+    --good: #2C5D3A;
+    --ui: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101413; --surface: #1A1A19; --surface-2: #232927;
+      --ink: #E9ECE8; --ink-2: #A2ADA8; --ink-3: #737F7A;
+      --rule: #2E3633; --rule-2: #262D2A;
+      --heat: #C4801A; --air: #1690B8;
+      --heat-fill: rgba(196,128,26,.16); --air-fill: rgba(22,144,184,.16);
+      --alert: #DA6F5F; --good: #7FBE92;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101413; --surface: #1A1A19; --surface-2: #232927;
+    --ink: #E9ECE8; --ink-2: #A2ADA8; --ink-3: #737F7A;
+    --rule: #2E3633; --rule-2: #262D2A;
+    --heat: #C4801A; --air: #1690B8;
+    --heat-fill: rgba(196,128,26,.16); --air-fill: rgba(22,144,184,.16);
+    --alert: #DA6F5F; --good: #7FBE92;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--ui); font-size: 14px; -webkit-font-smoothing: antialiased;
+  }
+  .app { display: grid; grid-template-columns: 286px 1fr; min-height: 100dvh; }
+
+  /* ---------- controls ---------- */
+  .side {
+    background: var(--surface); border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+  }
+  .brand { padding: 18px 18px 15px; border-bottom: 1px solid var(--rule); }
+  .brand .t { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand .t i { color: var(--heat); font-style: normal; }
+  .brand .s {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-3); margin-top: 3px;
+  }
+  .grp { padding: 15px 18px; border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: 13px; }
+  .grp h2 {
+    margin: 0; font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .ctl { display: flex; flex-direction: column; gap: 5px; }
+  .ctl .lab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12.5px; }
+  .ctl .lab .n { color: var(--ink-2); }
+  .ctl .lab .v {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    color: var(--ink); font-weight: 500; font-size: 12px;
+  }
+  input[type=range] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 3px;
+    background: var(--rule); outline: none; margin: 5px 0; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--heat); border: 2px solid var(--surface); cursor: pointer;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 12px; height: 12px; border-radius: 50%; background: var(--heat);
+    border: 2px solid var(--surface); cursor: pointer;
+  }
+  input[type=range].air::-webkit-slider-thumb { background: var(--air); }
+  input[type=range].air::-moz-range-thumb { background: var(--air); }
+  input[type=range]:focus-visible { outline: 2px solid var(--air); outline-offset: 3px; }
+  .reset {
+    font-family: var(--ui); font-size: 12.5px; background: var(--surface-2);
+    color: var(--ink); border: 1px solid var(--rule); padding: 7px 10px; cursor: pointer;
+  }
+  .reset:hover { border-color: var(--ink-3); }
+
+  /* ---------- main ---------- */
+  .main { padding: 20px 22px 40px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .tile { background: var(--surface); padding: 13px 14px 15px; display: flex; flex-direction: column; gap: 5px; }
+  .tile .k { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+  .tile .v {
+    font-size: 25px; font-weight: 600; letter-spacing: -0.02em; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .u { font-family: var(--mono); font-size: 11px; color: var(--ink-2); }
+  .tile.hero .v { color: var(--heat); }
+
+  .chart { background: var(--surface); border: 1px solid var(--rule); display: flex; flex-direction: column; }
+  .chead {
+    padding: 12px 15px; border-bottom: 1px solid var(--rule-2);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  }
+  .chead h3 { margin: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .chead .sub { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.05em; }
+  .legend { display: flex; gap: 13px; flex-wrap: wrap; }
+  .lg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink-2); }
+  .lg .d { width: 11px; height: 3px; border-radius: 2px; }
+  .cbody { position: relative; padding: 10px 12px 12px; }
+  canvas { display: block; width: 100%; }
+
+  .tip {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .12s;
+    background: var(--surface); border: 1px solid var(--rule);
+    padding: 7px 9px; font-family: var(--mono); font-size: 11px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.13); white-space: nowrap; z-index: 5;
+    font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .tip.on { opacity: 1; }
+  .tip .r { display: flex; gap: 9px; justify-content: space-between; }
+  .tip .r .k { color: var(--ink-3); }
+
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 1080px) { .pair { grid-template-columns: 1fr; } }
+  @media (max-width: 820px) { .app { grid-template-columns: 1fr; } .side { border-right: none; border-bottom: 1px solid var(--rule); } }
+
+  .note {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-left: 3px solid var(--air); padding: 15px 17px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .note h4 { margin: 0; font-size: 14px; font-weight: 600; }
+  .note p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-2); max-width: 78ch; }
+  .note b { color: var(--ink); font-weight: 600; }
+  .note.warn { border-left-color: var(--alert); }
+  .note.warn h4 { color: var(--alert); }
+
+  ul.as { margin: 0; padding-left: 19px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--ink-2); max-width: 78ch; }
+  ul.as li::marker { color: var(--air); }
+  ul.as b { color: var(--ink); }
+
+  .regime {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.09em;
+    text-transform: uppercase; padding: 3px 8px; border: 1px solid currentColor;
+  }
+  .regime.heat { color: var(--heat); }
+  .regime.air { color: var(--air); }
+</style>
+
+<div class="app">
+
+  <aside class="side">
+    <div class="brand">
+      <div class="t">re<i>:</i>plate</div>
+      <div class="s">Lumped-parameter drying model</div>
+    </div>
+
+    <div class="grp">
+      <h2>Machine</h2>
+      <div class="ctl">
+        <div class="lab"><span class="n">Heater power</span><span class="v" id="vP">400 W</span></div>
+        <input type="range" id="sP" min="150" max="900" step="10" value="400">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="n">Airflow</span><span class="v" id="vA">150 L/min</span></div>
+        <input type="range" class="air" id="sA" min="10" max="400" step="5" value="150">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="n">Insulation</span><span class="v" id="vI">25 mm</span></div>
+        <input type="range" id="sI" min="0" max="60" step="1" value="25">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="n">Setpoint</span><span class="v" id="vT">65 °C</span></div>
+        <input type="range" id="sT" min="45" max="85" step="1" value="65">
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Load</h2>
+      <div class="ctl">
+        <div class="lab"><span class="n">Batch mass</span><span class="v" id="vM">1.00 kg</span></div>
+        <input type="range" id="sM" min="0.3" max="3" step="0.05" value="1">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="n">Moisture</span><span class="v" id="vW">75 %</span></div>
+        <input type="range" id="sW" min="55" max="88" step="1" value="75">
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Site</h2>
+      <div class="ctl">
+        <div class="lab"><span class="n">Ambient</span><span class="v" id="vE">20 °C</span></div>
+        <input type="range" id="sE" min="5" max="35" step="1" value="20">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="n">Altitude</span><span class="v" id="vH">1300 m</span></div>
+        <input type="range" id="sH" min="0" max="2500" step="50" value="1300">
+      </div>
+      <button class="reset" id="reset">Reset to design point</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div class="tiles">
+      <div class="tile hero"><div class="k">Specific energy</div><div class="v" id="tSE">—</div><div class="u">kWh / kg water</div></div>
+      <div class="tile"><div class="k">Cycle time</div><div class="v" id="tCT">—</div><div class="u">hours</div></div>
+      <div class="tile"><div class="k">Energy</div><div class="v" id="tEN">—</div><div class="u">kWh / batch</div></div>
+      <div class="tile"><div class="k">Water removed</div><div class="v" id="tWR">—</div><div class="u">kg</div></div>
+      <div class="tile"><div class="k">Mass reduction</div><div class="v" id="tMR">—</div><div class="u">%</div></div>
+      <div class="tile"><div class="k">Limited by</div><div class="v" id="tRG" style="font-size:15px;padding-top:5px">—</div><div class="u" id="tRGu">&nbsp;</div></div>
+    </div>
+
+    <div class="chart">
+      <div class="chead">
+        <div>
+          <h3>Specific energy against airflow</h3>
+          <div class="sub">model sweep &middot; 10–400 L/min at current settings</div>
+        </div>
+        <div class="legend">
+          <span class="lg"><span class="d" style="background:var(--air)"></span>Energy per kg water</span>
+          <span class="lg"><span class="d" style="background:var(--heat)"></span>Cycle time</span>
+        </div>
+      </div>
+      <div class="cbody">
+        <canvas id="cSweep" height="260"></canvas>
+        <div class="tip" id="tipSweep"></div>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="chart">
+        <div class="chead">
+          <div><h3>Core temperature</h3><div class="sub">°C against time</div></div>
+        </div>
+        <div class="cbody">
+          <canvas id="cTemp" height="200"></canvas>
+          <div class="tip" id="tipTemp"></div>
+        </div>
+      </div>
+      <div class="chart">
+        <div class="chead">
+          <div><h3>Mass remaining</h3><div class="sub">kg against time &middot; the drying curve</div></div>
+        </div>
+        <div class="cbody">
+          <canvas id="cMass" height="200"></canvas>
+          <div class="tip" id="tipMass"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <h4>What the sweep is telling you</h4>
+      <p id="verdict">—</p>
+    </div>
+
+    <div class="note warn">
+      <h4>What this model is, and is not</h4>
+      <p><b>It is</b> a lumped-parameter (0-D) transient model: one coupled energy
+      balance and one mass-transfer relation, integrated forward in time. This is
+      the standard tool for sizing a dryer and for finding where an operating
+      optimum sits.</p>
+      <p><b>It is not</b> CFD and it is not FEA. There is no spatial resolution —
+      the load is treated as one well-mixed lump at a single temperature. It cannot
+      tell you about dead zones, channelling, or hot spots on the vessel wall.</p>
+      <p>Every number it produces is a <b>prediction to be tested</b>, not a
+      result. The point of building the machine is to find out where this model is
+      wrong.</p>
+    </div>
+
+    <div class="note">
+      <h4>Assumptions</h4>
+      <ul class="as">
+        <li><b>Well-mixed load</b> at uniform temperature — reasonable with an agitator running, less so between mixing intervals.</li>
+        <li><b>Exhaust approaches saturation</b> to a factor φ = 0.60, falling linearly once moisture content drops below X<sub>c</sub> = 0.6 kg/kg dry. This is what produces the falling-rate period.</li>
+        <li><b>Wall loss</b> from conduction through insulation plus 10 W/m²K outside convection, multiplied by 2.5 for thermal bridging through the lid, shaft and supports. That factor is an estimate and Phase 2 measures it.</li>
+        <li><b>Constant properties</b> — c<sub>p</sub> of solids 1.8 kJ/kg·K, water 4.18. Latent heat varies with temperature as h<sub>fg</sub> = 2501 − 2.36·T kJ/kg.</li>
+        <li><b>Altitude matters.</b> At 1300 m the ambient pressure is about 87 kPa, which raises saturation humidity and helps drying. Sea-level figures understate it.</li>
+        <li><b>Parasitic loads</b> included: blower scaled with airflow, agitator at its 20 s / 8 min duty.</li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ================= physics ================= */
+  var CP_S = 1800, CP_W = 4180, CP_AIR = 1005, R_AIR = 287;
+  var K_INS = 0.07, H_OUT = 10, BRIDGE = 2.5;
+  var D = 0.16, H = 0.20;
+  var A_WALL = Math.PI * D * H + 2 * Math.PI * (D / 2) * (D / 2);
+  var PHI = 0.60, XC = 0.6, RH_AMB = 0.40, REMOVE = 0.90;
+
+  function pAtm(alt) { return 101325 * Math.pow(1 - 2.25577e-5 * alt, 5.25588); }
+  function pSat(T) { return 610.94 * Math.exp(17.625 * T / (T + 243.04)); }
+  function omega(T, rh, P) { var p = rh * pSat(T); return 0.622 * p / Math.max(P - p, 1000); }
+  function hfg(T) { return (2501 - 2.36 * T) * 1000; }
+
+  function simulate(p) {
+    var P = pAtm(p.alt);
+    var mTot = p.mass, mw = mTot * p.moist, ms = mTot - mw;
+    var mw0 = mw, target = mw0 * (1 - REMOVE);
+    var T = p.tAmb;
+    var UA = (A_WALL / (p.ins / 1000 / K_INS + 1 / H_OUT)) * BRIDGE;
+    var rhoIn = P / (R_AIR * (p.tAmb + 273.15));
+    var mAir = (p.air / 1000 / 60) * rhoIn;          // kg/s dry-ish air
+    var wIn = omega(p.tAmb, RH_AMB, P);
+    var pBlow = 0.06 * p.air;                         // W, scales with flow
+    var pMotor = 26 * (20 / 500);                     // W average over duty
+
+    var dt = 2, t = 0, E = 0, heater = false, tMax = 14 * 3600;
+    var series = [], heatLim = 0, airLim = 0;
+
+    while (t < tMax && mw > target) {
+      if (T < p.tSet - 1.5) heater = true;
+      else if (T > p.tSet + 1.5) heater = false;
+      var Ph = heater ? p.power : 0;
+
+      var dT = Math.max(T - p.tAmb, 0);
+      var qWall = UA * dT;
+      var qExh = mAir * CP_AIR * dT;
+      var L = hfg(T);
+
+      var X = mw / Math.max(ms, 1e-6);
+      var f = Math.min(1, X / XC);
+      var wOut = wIn + f * PHI * Math.max(omega(T, 1, P) - wIn, 0);
+      var eAir = mAir * (wOut - wIn);
+      var eHeat = Math.max(0, (Ph - qWall - qExh) / L);
+      var evap = Math.min(eAir, eHeat);
+      if (eAir < eHeat) airLim += dt; else heatLim += dt;
+
+      var C = ms * CP_S + mw * CP_W;
+      var dTdt = (Ph - qWall - qExh - evap * L) / Math.max(C, 1);
+      T += dTdt * dt;
+      mw = Math.max(mw - evap * dt, 0);
+      E += (Ph + pBlow + pMotor) * dt;
+      t += dt;
+
+      if (series.length === 0 || t - series[series.length - 1].t > 60) {
+        series.push({ t: t, T: T, m: ms + mw, rate: evap * 3600 });
+      }
+    }
+    series.push({ t: t, T: T, m: ms + mw, rate: 0 });
+
+    var removed = mw0 - mw;
+    return {
+      time: t, hours: t / 3600, energy: E / 3.6e6,
+      removed: removed,
+      specific: removed > 1e-4 ? (E / 3.6e6) / removed : NaN,
+      reduction: 100 * (1 - (ms + mw) / mTot),
+      series: series, complete: mw <= target * 1.001,
+      airLimited: airLim > heatLim,
+      airFrac: airLim / Math.max(airLim + heatLim, 1)
+    };
+  }
+
+  /* ================= state ================= */
+  var DEF = { power: 400, air: 150, ins: 25, tSet: 65, mass: 1.0, moist: 0.75, tAmb: 20, alt: 1300 };
+  var S = Object.assign({}, DEF);
+
+  var el = function (id) { return document.getElementById(id); };
+  var css = function (n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
+
+  /* ================= chart engine ================= */
+  function setup(cv) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = parseInt(cv.getAttribute('height'), 10);
+    cv.width = w * dpr; cv.height = h * dpr; cv.style.height = h + 'px';
+    var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, w, h);
+    return { g: g, w: w, h: h };
+  }
+  function nice(v) { var e = Math.pow(10, Math.floor(Math.log10(v || 1))), n = v / e; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * e; }
+
+  function axes(c, pad, xr, yr, xfmt, yfmt) {
+    var g = c.g, W = c.w - pad.l - pad.r, Hh = c.h - pad.t - pad.b;
+    g.strokeStyle = css('--rule-2'); g.lineWidth = 1;
+    g.fillStyle = css('--ink-3');
+    g.font = '10px ' + "'IBM Plex Mono', monospace";
+    var steps = 4, i, v, y, x;
+    for (i = 0; i <= steps; i++) {
+      v = yr[0] + (yr[1] - yr[0]) * i / steps;
+      y = Math.round(pad.t + Hh - Hh * i / steps) + 0.5;
+      g.beginPath(); g.moveTo(pad.l, y); g.lineTo(pad.l + W, y); g.stroke();
+      g.textAlign = 'right'; g.textBaseline = 'middle';
+      g.fillText(yfmt(v), pad.l - 7, y);
+    }
+    for (i = 0; i <= 4; i++) {
+      v = xr[0] + (xr[1] - xr[0]) * i / 4;
+      x = Math.round(pad.l + W * i / 4);
+      g.textAlign = i === 0 ? 'left' : (i === 4 ? 'right' : 'center');
+      g.textBaseline = 'top';
+      g.fillText(xfmt(v), x, pad.t + Hh + 7);
+    }
+    return { W: W, H: Hh, pad: pad, xr: xr, yr: yr,
+      px: function (x) { return pad.l + (x - xr[0]) / (xr[1] - xr[0]) * W; },
+      py: function (y) { return pad.t + Hh - (y - yr[0]) / (yr[1] - yr[0]) * Hh; } };
+  }
+
+  function line(c, ax, pts, color, fill) {
+    var g = c.g, i;
+    if (fill) {
+      g.beginPath(); g.moveTo(ax.px(pts[0][0]), ax.py(ax.yr[0]));
+      for (i = 0; i < pts.length; i++) g.lineTo(ax.px(pts[i][0]), ax.py(pts[i][1]));
+      g.lineTo(ax.px(pts[pts.length - 1][0]), ax.py(ax.yr[0]));
+      g.closePath(); g.fillStyle = fill; g.fill();
+    }
+    g.beginPath();
+    for (i = 0; i < pts.length; i++) {
+      var X = ax.px(pts[i][0]), Y = ax.py(pts[i][1]);
+      if (i === 0) g.moveTo(X, Y); else g.lineTo(X, Y);
+    }
+    g.strokeStyle = color; g.lineWidth = 2;
+    g.lineJoin = 'round'; g.lineCap = 'round'; g.stroke();
+  }
+
+  /* ================= sweep chart ================= */
+  var sweepPts = [];
+  function drawSweep() {
+    var cv = el('cSweep'), c = setup(cv);
+    var flows = [], i;
+    for (i = 10; i <= 400; i += 6) flows.push(i);
+    sweepPts = flows.map(function (f) {
+      var r = simulate(Object.assign({}, S, { air: f }));
+      return { f: f, se: r.complete ? r.specific : NaN, hr: r.complete ? r.hours : NaN };
+    }).filter(function (d) { return isFinite(d.se) && d.se < 40; });
+
+    if (sweepPts.length < 3) { return; }
+    var seMax = nice(Math.max.apply(null, sweepPts.map(function (d) { return d.se; })) * 1.05);
+    var hrMaxV = Math.max.apply(null, sweepPts.map(function (d) { return d.hr; }));
+    var pad = { l: 46, r: 46, t: 14, b: 26 };
+    var ax = axes(c, pad, [10, 400], [0, seMax],
+      function (v) { return Math.round(v); },
+      function (v) { return v.toFixed(1); });
+
+    // cycle time, scaled into the same box but drawn as a secondary reference:
+    // normalised to its own max and drawn faint - NOT a second axis with ticks.
+    var hrPts = sweepPts.map(function (d) { return [d.f, d.hr / hrMaxV * seMax * 0.92]; });
+    line(c, ax, hrPts, css('--heat'), css('--heat-fill'));
+    line(c, ax, sweepPts.map(function (d) { return [d.f, d.se]; }), css('--air'), css('--air-fill'));
+
+    // optimum
+    var best = sweepPts.reduce(function (a, b) { return b.se < a.se ? b : a; });
+    var bx = ax.px(best.f), by = ax.py(best.se), g = c.g;
+    g.strokeStyle = css('--air'); g.lineWidth = 1; g.setLineDash([3, 3]);
+    g.beginPath(); g.moveTo(bx, ax.py(ax.yr[0])); g.lineTo(bx, by); g.stroke();
+    g.setLineDash([]);
+    g.beginPath(); g.arc(bx, by, 5.5, 0, 6.2832);
+    g.fillStyle = css('--air'); g.fill();
+    g.strokeStyle = css('--surface'); g.lineWidth = 2; g.stroke();
+    g.fillStyle = css('--ink'); g.font = '600 11px ' + "'IBM Plex Mono', monospace";
+    g.textAlign = bx > c.w - 150 ? 'right' : 'left'; g.textBaseline = 'bottom';
+    g.fillText('optimum ' + best.f + ' L/min  ' + best.se.toFixed(2) + ' kWh/kg',
+      bx + (bx > c.w - 150 ? -10 : 10), by - 10);
+
+    // current setting marker
+    var cur = sweepPts.reduce(function (a, b) { return Math.abs(b.f - S.air) < Math.abs(a.f - S.air) ? b : a; });
+    var cx = ax.px(cur.f);
+    g.strokeStyle = css('--ink-3'); g.lineWidth = 1; g.setLineDash([2, 4]);
+    g.beginPath(); g.moveTo(cx, pad.t); g.lineTo(cx, pad.t + ax.H); g.stroke();
+    g.setLineDash([]);
+
+    g.fillStyle = css('--ink-3'); g.font = '10px ' + "'IBM Plex Mono', monospace";
+    g.textAlign = 'center'; g.textBaseline = 'top';
+    g.fillText('L/min', pad.l + ax.W / 2, pad.t + ax.H + 7);
+
+    cv._ax = ax; cv._best = best; cv._hrMax = hrMaxV; cv._seMax = seMax;
+    verdict(best);
+  }
+
+  function verdict(best) {
+    var cur = simulate(S);
+    var msg;
+    if (!cur.complete) {
+      msg = 'At these settings the batch <b>does not dry within 14 hours</b>. Either the heater cannot supply the latent heat, or the airflow cannot carry the vapour away. Raise one and watch which changes the answer.';
+    } else {
+      var d = ((cur.specific - best.se) / best.se) * 100;
+      msg = 'The model puts the optimum near <b>' + best.f + ' L/min</b>, at ' +
+        best.se.toFixed(2) + ' kWh per kg of water removed. ';
+      if (Math.abs(S.air - best.f) < 12) {
+        msg += 'You are sitting on it.';
+      } else if (S.air > best.f) {
+        msg += 'The current ' + S.air + ' L/min is <b>above</b> that, costing about ' +
+          d.toFixed(0) + '% more energy per kg — the extra air is carrying heat out faster than it carries water out.';
+      } else {
+        msg += 'The current ' + S.air + ' L/min is <b>below</b> it, costing about ' +
+          d.toFixed(0) + '% more per kg and a longer cycle — there is not enough air to remove the vapour the heater is producing.';
+      }
+      if (best.f < 80) {
+        msg += ' Note this sits <b>under the 80–150 L/min range recorded in Prediction 2</b>. If the model is right, that prediction is wrong, and the blower specification should come down.';
+      }
+    }
+    el('verdict').innerHTML = msg;
+  }
+
+  /* ================= time series ================= */
+  function drawSeries(cvId, tipId, key, color, fillVar, fmt, unit) {
+    var cv = el(cvId), c = setup(cv), r = simulate(S);
+    var pts = r.series.map(function (d) { return [d.t / 3600, d[key]]; });
+    if (pts.length < 2) return;
+    var ys = pts.map(function (p) { return p[1]; });
+    var lo = key === 'T' ? 0 : 0, hi = nice(Math.max.apply(null, ys) * 1.12);
+    var xhi = Math.max(pts[pts.length - 1][0], 0.5);
+    var pad = { l: 44, r: 14, t: 12, b: 24 };
+    var ax = axes(c, pad, [0, xhi], [lo, hi], function (v) { return v.toFixed(1); }, fmt);
+    line(c, ax, pts, css(color), css(fillVar));
+    var g = c.g;
+    g.fillStyle = css('--ink-3'); g.font = '10px ' + "'IBM Plex Mono', monospace";
+    g.textAlign = 'center'; g.textBaseline = 'top';
+    g.fillText('hours', pad.l + ax.W / 2, pad.t + ax.H + 7);
+    cv._ax = ax; cv._pts = pts; cv._unit = unit; cv._fmt = fmt;
+  }
+
+  function hookHover(cvId, tipId, label) {
+    var cv = el(cvId), tip = el(tipId);
+    cv.addEventListener('pointermove', function (e) {
+      var ax = cv._ax, pts = cv._pts; if (!ax || !pts) return;
+      var rect = cv.getBoundingClientRect(), mx = e.clientX - rect.left;
+      var best = null, bd = 1e9;
+      pts.forEach(function (p) { var d = Math.abs(ax.px(p[0]) - mx); if (d < bd) { bd = d; best = p; } });
+      if (!best || bd > 40) { tip.classList.remove('on'); return; }
+      tip.innerHTML = '<div class="r"><span class="k">t</span><span>' + best[0].toFixed(2) + ' h</span></div>' +
+        '<div class="r"><span class="k">' + label + '</span><span>' + cv._fmt(best[1]) + ' ' + cv._unit + '</span></div>';
+      tip.classList.add('on');
+      var tx = ax.px(best[0]) + 12, ty = ax.py(best[1]) - 10;
+      if (tx > cv.clientWidth - 110) tx -= 130;
+      tip.style.left = tx + 'px'; tip.style.top = Math.max(ty, 4) + 'px';
+    });
+    cv.addEventListener('pointerleave', function () { el(tipId).classList.remove('on'); });
+  }
+
+  el('cSweep').addEventListener('pointermove', function (e) {
+    var cv = el('cSweep'), tip = el('tipSweep'), ax = cv._ax; if (!ax) return;
+    var rect = cv.getBoundingClientRect(), mx = e.clientX - rect.left;
+    var best = null, bd = 1e9;
+    sweepPts.forEach(function (d) { var q = Math.abs(ax.px(d.f) - mx); if (q < bd) { bd = q; best = d; } });
+    if (!best || bd > 30) { tip.classList.remove('on'); return; }
+    tip.innerHTML = '<div class="r"><span class="k">airflow</span><span>' + best.f + ' L/min</span></div>' +
+      '<div class="r"><span class="k">energy</span><span>' + best.se.toFixed(2) + ' kWh/kg</span></div>' +
+      '<div class="r"><span class="k">cycle</span><span>' + best.hr.toFixed(2) + ' h</span></div>';
+    tip.classList.add('on');
+    var tx = ax.px(best.f) + 14; if (tx > cv.clientWidth - 150) tx -= 175;
+    tip.style.left = tx + 'px'; tip.style.top = '18px';
+  });
+  el('cSweep').addEventListener('pointerleave', function () { el('tipSweep').classList.remove('on'); });
+
+  hookHover('cTemp', 'tipTemp', 'temp');
+  hookHover('cMass', 'tipMass', 'mass');
+
+  /* ================= tiles ================= */
+  function tiles() {
+    var r = simulate(S);
+    el('tSE').textContent = r.complete ? r.specific.toFixed(2) : '—';
+    el('tCT').textContent = r.complete ? r.hours.toFixed(1) : '>14';
+    el('tEN').textContent = r.complete ? r.energy.toFixed(2) : '—';
+    el('tWR').textContent = r.removed.toFixed(3);
+    el('tMR').textContent = r.reduction.toFixed(0);
+    var rg = el('tRG'), ru = el('tRGu');
+    if (!r.complete) { rg.innerHTML = '<span class="regime warn">incomplete</span>'; ru.textContent = 'does not finish'; }
+    else if (r.airLimited) { rg.innerHTML = '<span class="regime air">airflow</span>'; ru.textContent = Math.round(r.airFrac * 100) + '% of cycle'; }
+    else { rg.innerHTML = '<span class="regime heat">heat</span>'; ru.textContent = Math.round((1 - r.airFrac) * 100) + '% of cycle'; }
+  }
+
+  /* ================= wiring ================= */
+  var MAP = [
+    ['sP', 'vP', 'power', function (v) { return v + ' W'; }, 1],
+    ['sA', 'vA', 'air', function (v) { return v + ' L/min'; }, 1],
+    ['sI', 'vI', 'ins', function (v) { return v + ' mm'; }, 1],
+    ['sT', 'vT', 'tSet', function (v) { return v + ' °C'; }, 1],
+    ['sM', 'vM', 'mass', function (v) { return (+v).toFixed(2) + ' kg'; }, 1],
+    ['sW', 'vW', 'moist', function (v) { return v + ' %'; }, 100],
+    ['sE', 'vE', 'tAmb', function (v) { return v + ' °C'; }, 1],
+    ['sH', 'vH', 'alt', function (v) { return v + ' m'; }, 1]
+  ];
+  var raf = null;
+  function redraw() {
+    if (raf) return;
+    raf = requestAnimationFrame(function () {
+      raf = null;
+      tiles();
+      drawSeries('cTemp', 'tipTemp', 'T', '--heat', '--heat-fill', function (v) { return v.toFixed(0); }, '°C');
+      drawSeries('cMass', 'tipMass', 'm', '--air', '--air-fill', function (v) { return v.toFixed(2); }, 'kg');
+      drawSweep();
+    });
+  }
+  MAP.forEach(function (m) {
+    var s = el(m[0]);
+    s.addEventListener('input', function () {
+      S[m[2]] = parseFloat(s.value) / m[4];
+      el(m[1]).textContent = m[3](s.value);
+      redraw();
+    });
+  });
+  el('reset').addEventListener('click', function () {
+    S = Object.assign({}, DEF);
+    MAP.forEach(function (m) {
+      var raw = S[m[2]] * m[4];
+      el(m[0]).value = raw; el(m[1]).textContent = m[3](raw);
+    });
+    redraw();
+  });
+
+  window.addEventListener('resize', function () { redraw(); });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', redraw);
+  }
+  redraw();
+})();
+</script>
