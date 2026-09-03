@@ -48,13 +48,36 @@ here because the reasoning matters more than the part.
 | 17 | Activated carbon | 200 g, odour filter | Pharmacy / AliExpress | 2 | 4 |
 | 18 | Frame | 18 mm plywood or salvaged steel | Timber market | 4 | 12 |
 | 19 | Sealing | High-temp silicone, fasteners, shaft dust seal | Building supplies | 3 | 10 |
-| 20 | Consumables | Breadboard, jumpers, JST, solder, heat-shrink | Local electronics | 1 | 14 |
+| 20 | Consumables | Breadboard, jumpers, JST connectors, solder, heat-shrink | Local electronics | 1 | 14 |
+| 21 | Passives and switches | 4.7 kΩ pull-up, assorted resistors, LEDs, momentary pushbutton, **microswitch for lid interlock** | Local electronics | 1 | 8 |
 
 | | USD |
 |---|---|
-| Parts subtotal | **158** |
-| Contingency | **67** |
+| Parts subtotal | **166** |
+| Contingency | **59** |
 | **Total** | **225** |
+
+### On item 21
+
+Added 2026-09-01 after a read-through caught that the firmware and the safety
+analysis both depend on parts that were never listed.
+
+The firmware header specifies a 4.7 kΩ pull-up on the DS18B20 bus — without it
+the temperature sensors do not read at all, and temperature is the one
+measurement every other decision hangs on. `PIN_BTN` and `PIN_LID` likewise
+assume a pushbutton and a microswitch that appeared nowhere in this list.
+
+The microswitch is the more serious omission: it is hazard **H5** in
+[`safety.md`](./safety.md), the hardware lid interlock that cuts motor power
+independently of firmware. A safety mitigation that is specified but never
+purchased is not a mitigation.
+
+The LEDs exist for the staged bring-up in
+[`../firmware/README.md`](../firmware/README.md) — step 3 is to drive an LED
+rather than a heater while the switching logic is verified. That step is only
+possible if an LED was bought.
+
+Cost absorbed from contingency rather than by cutting elsewhere.
 
 ### On the contingency line
 
@@ -73,6 +96,11 @@ depend on decisions that Phase 1 and 2 data will inform.
 **Order now — long lead time (~$44)**
 SSR, ESP32, HX711 + load cells, DS18B20 × 2, DHT22 × 2, SD module, BTS7960,
 thermal fuses, blower.
+
+**Buy locally alongside (~$22)**
+Consumables and item 21. Do not wait on shipping for these — the staged
+firmware bring-up needs the LEDs and the 4.7 kΩ pull-up on day one, and every
+day spent waiting on a $0.05 resistor is a day the sensors cannot be tested.
 
 **Source locally this week (~$29)**
 Rice cooker, wiper motor, ATX power supply.
