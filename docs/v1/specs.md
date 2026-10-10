@@ -93,7 +93,7 @@ is a smaller machine, and it needs real numbers on the left.
 | Parameter | v1 as built | v2 target |
 |---|---|---|
 | Batch capacity | | 1.0 kg |
-| Cycle time | | 4-5 h |
+| Cycle time | | within 6 h |
 | Heater rating | | 400 W duty-cycled |
 | Temperature control | | Closed loop, hysteresis ±3 °C |
 | Instrumentation | none | Load cell, 2 × temperature, 2 × humidity, motor current |

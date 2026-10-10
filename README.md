@@ -1,7 +1,7 @@
 # re:plate
 
 An open-source benchtop machine that dries and grinds food waste into a stable,
-storable soil amendment feedstock in under five hours, so that the material can
+storable soil amendment feedstock within six hours, so that the material can
 go back to farms instead of to landfill.
 
 **What we think is true:** turning food waste into fertiliser feedstock is a
@@ -114,7 +114,7 @@ back onto land.
 
 ```
 restaurant and household food waste
-  -> [ re:plate, about 5 hours ]   -> dried, ground feedstock
+  -> [ re:plate, up to 6 hours ]   -> dried, ground feedstock
   -> [ curing, 2 to 4 weeks ]      -> soil amendment
   -> farms and growers
 ```
@@ -158,7 +158,7 @@ excuse.
 
 ## What this machine does not do
 
-It does **not** make finished compost. Any machine claiming to do that in five
+It does **not** make finished compost. Any machine claiming to do that in six
 hours is overstating it. What comes out is dried, ground, odourless organic
 material with most of the water removed, stable enough to store for months. It
 becomes compost after two to four weeks of curing, which is the process we spent
@@ -187,7 +187,7 @@ the main experiment in this project.
 | Parameter | Target | Where it comes from |
 |---|---|---|
 | Batch capacity | 1.0 kg wet waste | Reduced from v1, see the efficiency problem above |
-| Cycle time | 4 to 5 hours | Energy balance |
+| Cycle time | within 6 hours | Specification limit. The energy balance is sized at a 4 h design point, so the heater has margin to finish sooner. |
 | Energy per cycle | 0.82 kWh | Q = 2 963 kJ at n = 0.60 |
 | **Specific energy** | **1.21 kWh / kg water** | The number we are trying to reduce |
 | Mass reduction | about 65% | 90% of water removed |
