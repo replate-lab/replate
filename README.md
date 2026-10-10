@@ -62,7 +62,14 @@ Four co-founders, Ulaanbaatar, Mongolia.
 | **Zuliinbaysgalan Enebish** | Experimental design and analysis: test matrix, uncertainty, results |
 
 We list responsibilities because none of us did this alone and it would be wrong
-to imply otherwise. The commit history shows who did what.
+to imply otherwise.
+
+One caveat about this repository, so nobody has to guess. Every commit so far
+was pushed from a single account, Chinbuyan's, because he set the repository up
+and transcribed the written notes and calculations the four of us produced
+together. The commit history therefore records who uploaded the work, not who
+did it. The other three are setting up their own accounts and will commit their
+own areas from here on.
 
 ## Where this came from
 
@@ -106,6 +113,13 @@ reading points at a cause: the heater's outer surface sits below the vessel's
 internal temperature, which should not happen while it is actively heating. The
 next measurement is a plug-in energy meter to find out what the machine actually
 draws.
+
+Those four figures come from one measurement session, and the readings and the
+arithmetic behind them are in
+[`data/v1-surface-temps-2026-10/`](./data/v1-surface-temps-2026-10). The surface
+figure depends on an estimate of v1's vessel size that we have not measured,
+which the dataset states plainly. It is a single session with no repeats, enough
+to point at a problem and not enough to describe one.
 
 ## Where the output goes
 

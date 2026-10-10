@@ -3,7 +3,8 @@
 Raw logs from every run, including failed ones.
 
 **Lead:** Zuliinbaysgalan Enebish
-**Status:** Machine runs not started. Two strands of work feed this directory.
+**Status:** Instrumented machine runs not started. Three strands of work feed
+this directory.
 
 1. **Composting programme**, the manual process that preceded the machine, and
    the logging standard for batches going forward:
@@ -11,13 +12,20 @@ Raw logs from every run, including failed ones.
 2. **Germination trial**, the liquid fertiliser tested on flowers and
    vegetables. Protocol, control design, and the Zucconi maturity index:
    [`../docs/germination-trial.md`](../docs/germination-trial.md)
+3. **v1 surface temperatures**, one external-thermometer session on the
+   prototype, and the energy balance derived from it:
+   [`v1-surface-temps-2026-10/`](./v1-surface-temps-2026-10)
 
 **Nothing in this directory is estimated.** Where a measurement was not taken,
 the field stays empty. An empty cell can be filled later; an invented number
-that gets quoted downstream cannot be pulled back.
+that gets quoted downstream cannot be pulled back. Where a figure is calculated
+from a measurement rather than measured directly, the file says so and states
+what the calculation assumes.
 
-**Prototype v1 produces no data at all**, it carries no sensors. Instrumenting
-it for a baseline is Phase 1, before any mechanical change to v2.
+**Prototype v1 carries no sensors.** Everything known about it comes from
+instruments held against it from outside, which is why the one v1 dataset here
+is surface temperatures and nothing else. Instrumenting the machine properly is
+Phase 1, before any mechanical change to v2.
 
 ---
 

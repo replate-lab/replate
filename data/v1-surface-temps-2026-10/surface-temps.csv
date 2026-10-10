@@ -1,0 +1,11 @@
+point_id,location,temp_c
+1,lid_centre,57.8
+2,lid_edge,49.6
+3,shaft_penetration,61.7
+4,wall_upper,54.3
+5,wall_middle,51.8
+6,wall_lower,45.7
+7,base,63.5
+8,exhaust_duct_100mm,42.8
+9,heater_outer_surface,68.2
+10,lid_condensation_zone,52.4
